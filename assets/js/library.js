@@ -19,16 +19,48 @@
 // clear
 // If the user executes the "clear" command, the previous records WON’T be deleted from localStorage, it only clears visually in Terminal.
 
-function library(cmd) {
+function library(cmd, arg1 = '') {
     switch(cmd) {
         case 'pwd':
-            //execute function pwd(){}
+            pwd()
             break;
         case 'ls':
-            //execute function ls(flag = default value){}
+            ls(arg1) 
+            break;
+        case 'cd':
+            cd(arg1)
+            break;
+        case 'mkdir':
+            mkdir(arg1)
+            break;
+        case 'echo':
+            echo(arg1)  // echo "my name is yogi" > text.txt
+            break;
+        case 'cat':
+            cat(arg1) // cat text.txt
+            break;
+        case 'rm':
+            rm(arg1)
+            break;
+        case 'mv':
+            mv(arg1) // mv text.txt /my/new/folder
+            break;
+        case 'clear':
+            clear()
             break;
         default:
             return new Error('this command is not available.')
 
     }
+
+    // history()
 }
+
+// let history = []
+// let counter = 0
+// window.addEventListener('keypress', (e)=> {
+//     if(e.key = 'Up'){
+//         counter++
+//         console.log(history[history.length - counter])
+//     }
+// })
