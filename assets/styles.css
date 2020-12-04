@@ -1,0 +1,42 @@
+.terminal-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    width: 70%;
+    margin: 0 10px
+
+}
+.header__close{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 20%;
+}
+.header__close-red{
+    background-color: red;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+}
+.header__close-green{
+    background-color: green;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+}
+.header__close-blue{
+    background-color: blue;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+}
+.display-terminal{
+    width: 70%;
+}
