@@ -24,7 +24,11 @@ function pwd() {
 }
 
 function ls(flag) {
-    let folders = Object.keys(eval(inUseRoute));
+    let route = inUseRoute.split("/");
+    let routeObject = "raulrexulon";
+    for (let i = 1; i < route.length; i++) {
+        routeObject += "[" + "'" + route[i] + "'" + "]";
+    }
     switch(flag) {
         case "-R":
             return "Estamos haciendo un ls -R"
@@ -38,7 +42,9 @@ function ls(flag) {
             return new Error('this command is not available.');
     }
     function printFolders() {
-        folders.forEach(e => {
+        console.log(eval(routeObject));
+        let folder = Object.keys(eval(routeObject));
+        folder.forEach(e => {
             let p = document.createElement('p');
             p.textContent = e;
             input.insertAdjacentElement('beforebegin', p);
@@ -47,6 +53,7 @@ function ls(flag) {
 }
 
 function cd(flag) {
+    console.log(flag);
     if (flag.length === 0) {
         return goDirectoryDefault();
     } else if (flag === "..") {
@@ -60,7 +67,8 @@ function cd(flag) {
         return new Error ('this command is not available.');
     }
     function goDirectoryDefault() {
-        routeToShow = "raulrexulon";
+        inUseRoute = `raulrexulon`;
+        input.innerHTML = `>raulrexulon:`;
     }
 }
 
