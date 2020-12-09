@@ -54,6 +54,8 @@ function library(cmd, arg1 = '') {
             return mv(arg1) // mv text.txt /my/new/folder
         case 'clear':
             return clear()
+        case 'help':
+            return help()
         default:
             return new Error('this command is not available.')
 
