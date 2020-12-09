@@ -22,7 +22,11 @@ const input = document.querySelector('.display-terminal label');
 
 window.addEventListener('keypress', (e) => {
     if (e.key == 'Enter') {
-        let i = e.target.value, cmd = i.split(' ')[0].trim(), arg = i.split(' ')[1] || ''
+        let i = e.target.value, cmd = i.split(' ')[0].trim(), arg = ''
+        for(let index = 1; index < i.split(' ').length; index++){
+            arg += i.split(' ')[index] + ' '
+        }
+        arg = arg.trim()
         if (cmd == 'clear'){
             library(cmd, arg)
         } else {
@@ -66,5 +70,4 @@ function library(cmd, arg1 = '') {
 
     }
 
-    
 }
