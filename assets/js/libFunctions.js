@@ -1,25 +1,21 @@
 // individual functions
 
 function pwd() {
-
+    return "Estamos haciendo un pwd";
 }
 
 function ls(flag = "") {
     switch(flag) {
         case "-R":
-            //create funcionality
-            break;
+            return "Estamos haciendo un ls -R"
         case "-S":
-            //create funcionality
-            break;
+            return "Estamos haciendo un ls -S"
         case "-t":
-            //create funcionality
-            break;
+            return "Estamos haciendo un ls -t"
         case "":
-            //create funcionality
-            break;
+            return "Estamos haciendo un ls"
         default:
-            throw new Error();
+            return new Error('this command is not available.');
     }
 }
 
