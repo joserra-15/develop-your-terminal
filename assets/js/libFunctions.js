@@ -1,18 +1,21 @@
 // Create the object to simulate directorys
 
-let raulrexulon = {
+let directoryObject = {
+    "raulrexulon": {
         "Desktop" : {"Mierdas": {}, "No Mierdas": {}},
         "Documents Mi Abuela": {"Mierdas": {"1": "1", "2": "2", "3": "3"}, "No Mierdas": {}},
         "Downloads": {}
-    };
+    }
+};
 //updateObject();
 
 
 
 // create variables
 
+let directoryRoot = true;
 let inUseRoute = `raulrexulon`;
-let manolo = dotify(raulrexulon);
+let manolo = dotify(directoryObject);
 let rutas = Object.keys(manolo);
 console.log(rutas);
 
@@ -24,9 +27,15 @@ function pwd() {
 }
 
 function ls(flag) {
-    let route = inUseRoute.split("/");
-    let routeObject = "raulrexulon";
-    for (let i = 1; i < route.length; i++) {
+    let routeObject = "directoryObject", route;
+    if(directoryRoot === true) {
+        route = inUseRoute.split("").slice(0).join("");
+    } else {
+        route = inUseRoute.split("").slice(1).join("");
+    }
+    route = route.split("/");
+    console.log(route);
+    for (let i = 0; i < route.length; i++) {
         routeObject += "[" + "'" + route[i] + "'" + "]";
     }
     switch(flag) {
@@ -42,7 +51,6 @@ function ls(flag) {
             return new Error('this command is not available.');
     }
     function printFolders() {
-        console.log(eval(routeObject));
         let folder = Object.keys(eval(routeObject));
         folder.forEach(e => {
             let p = document.createElement('p');
@@ -53,22 +61,25 @@ function ls(flag) {
 }
 
 function cd(flag) {
-    console.log(flag);
     if (flag.length === 0) {
         return goDirectoryDefault();
     } else if (flag === "..") {
-
-    } else if (flag.length > 0 && rutas.includes(flag)) {
+        inUseRoute = inUseRoute.split("/");
+        inUseRoute.pop();
+        inUseRoute.join("/");
+        input.innerHTML = inUseRoute + ":";
+    } else if (flag.length > 0 && rutas.includes(`${inUseRoute}/${flag}`)) {
         let route = input.textContent.split(":");
-        console.log(route[0]);
         input.innerHTML = route[0] + `/` + flag + ":";
         inUseRoute = route[0] + `/` + flag;
+        directoryRoot = false;
     } else {
         return new Error ('this command is not available.');
     }
     function goDirectoryDefault() {
         inUseRoute = `raulrexulon`;
         input.innerHTML = `>raulrexulon:`;
+        directoryRoot = true;
     }
 }
 
