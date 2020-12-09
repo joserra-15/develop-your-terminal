@@ -1,25 +1,21 @@
 // individual functions
 
 function pwd() {
-
+    return "Estamos haciendo un pwd";
 }
 
 function ls(flag = "") {
     switch(flag) {
         case "-R":
-            //create funcionality
-            break;
+            return "Estamos haciendo un ls -R"
         case "-S":
-            //create funcionality
-            break;
+            return "Estamos haciendo un ls -S"
         case "-t":
-            //create funcionality
-            break;
+            return "Estamos haciendo un ls -t"
         case "":
-            //create funcionality
-            break;
+            return "Estamos haciendo un ls"
         default:
-            throw new Error();
+            return new Error('this command is not available.');
     }
 }
 
@@ -57,7 +53,7 @@ function mv() {
 }
 
 function clear() {
-
+    document.querySelectorAll('.display-terminal p').forEach(e => e.remove())
 }
 function help(){
     const help=`These shell commands are defined internally.  Type 'help' to see this list.
@@ -105,6 +101,6 @@ function help(){
      getopts optstring name [arg]                                                                                                    wait [-fn] [id ...]
      hash [-lr] [-p pathname] [-dt] [name ...]                                                                                       while COMMANDS; do COMMANDS; done
      help [-dms] [pattern ...]                                                                                                       { COMMANDS ; }`;
-    console.log(help)
-    input.insertAdjacentHTML("beforebegin", `<pre>${help}</pre>`)
+     console.log(help)
+     input.insertAdjacentHTML("beforebegin", `<pre>${help}</pre>`)
 }
