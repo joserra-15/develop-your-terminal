@@ -1,7 +1,10 @@
 // individual functions
 
 function pwd() {
-    return "Estamos haciendo un pwd";
+    let initialRoute = input.textContent;
+    let medRoute = initialRoute.slice(1);
+    let route = medRoute.slice(0, (medRoute.length -1))
+    return route;
 }
 
 function ls(flag = "") {
