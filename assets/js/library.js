@@ -11,7 +11,7 @@
 // mkdir
 // echo
 // Use this command to create files and the possibility of adding a text inside each of them
-// cat 
+// cat
 // Use this command to show the content of the created files
 // rm
 // mv
@@ -33,8 +33,8 @@ window.addEventListener('keypress', (e) => {
             result.textContent = library(cmd, arg)
             input.insertAdjacentElement('beforebegin', result)
         }
-        setTimeout(()=>{e.target.value = ''}, 1)       
-    } 
+        setTimeout(()=>{e.target.value = ''}, 1)
+    }
 })
 
 
