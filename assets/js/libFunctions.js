@@ -53,5 +53,5 @@ function mv() {
 }
 
 function clear() {
-
+    document.querySelectorAll('.display-terminal p').forEach(e => e.remove())
 }

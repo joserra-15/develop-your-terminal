@@ -22,15 +22,19 @@ const input = document.querySelector('.display-terminal label');
 
 window.addEventListener('keypress', (e) => {
     if (e.key == 'Enter') {
-        let i = e.target.value, cmd = i.split(' ')[0], arg = i.split(' ')[1] || ''
-        let p = document.createElement('p')
-        p.textContent = `>raulrexulon: ${cmd} ${arg}`
-        input.insertAdjacentElement('beforebegin', p)
-        let result = document.createElement('p')
-        result.textContent = library(cmd, arg)
-        input.insertAdjacentElement('beforebegin', result)
-        e.target.value = ''
-    }
+        let i = e.target.value, cmd = i.split(' ')[0].trim(), arg = i.split(' ')[1] || ''
+        if (cmd == 'clear'){
+            library(cmd, arg)
+        } else {
+            let p = document.createElement('p')
+            p.textContent = `>raulrexulon: ${cmd} ${arg}`
+            input.insertAdjacentElement('beforebegin', p)
+            let result = document.createElement('p')
+            result.textContent = library(cmd, arg)
+            input.insertAdjacentElement('beforebegin', result)
+        }
+        setTimeout(()=>{e.target.value = ''}, 1)       
+    } 
 })
 
 
