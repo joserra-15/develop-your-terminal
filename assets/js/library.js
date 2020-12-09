@@ -39,6 +39,7 @@ window.addEventListener('keypress', (e) => {
 
 
 function library(cmd, arg1 = '') {
+    history(cmd, arg1);
     switch(cmd) {
         case 'pwd':
             return pwd()
@@ -65,5 +66,5 @@ function library(cmd, arg1 = '') {
 
     }
 
-    // history()
+    
 }
