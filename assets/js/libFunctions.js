@@ -1,13 +1,30 @@
+// Create the object to simulate directorys
+
+let raulrexulon = {
+        "Desktop" : {"Mierdas": {}, "No Mierdas": {}},
+        "Documents Mi Abuela": {"Mierdas": {"1": "1", "2": "2", "3": "3"}, "No Mierdas": {}},
+        "Downloads": {}
+    };
+//updateObject();
+
+
+
+// create variables
+
+let inUseRoute = `raulrexulon`;
+let manolo = dotify(raulrexulon);
+let rutas = Object.keys(manolo);
+console.log(rutas);
+
+
 // individual functions
 
 function pwd() {
-    let initialRoute = input.textContent;
-    let medRoute = initialRoute.slice(1);
-    let route = medRoute.slice(0, (medRoute.length -1))
-    return route;
+    return inUseRoute;
 }
 
-function ls(flag = "") {
+function ls(flag) {
+    let folders = Object.keys(eval(inUseRoute));
     switch(flag) {
         case "-R":
             return "Estamos haciendo un ls -R"
@@ -16,26 +33,38 @@ function ls(flag = "") {
         case "-t":
             return "Estamos haciendo un ls -t"
         case "":
-            return "Estamos haciendo un ls"
+            return printFolders()
         default:
             return new Error('this command is not available.');
     }
-}
-
-function cd(flag = "") {
-    switch(flag) {
-        case "..":
-            //Create funcionality
-            break;
-        case "":
-            //Create funcionality
-            break;
-        default:
-            throw new Error();
+    function printFolders() {
+        folders.forEach(e => {
+            let p = document.createElement('p');
+            p.textContent = e;
+            input.insertAdjacentElement('beforebegin', p);
+        })
     }
 }
 
-function mkdi() {
+function cd(flag) {
+    if (flag.length === 0) {
+        return goDirectoryDefault();
+    } else if (flag === "..") {
+
+    } else if (flag.length > 0 && rutas.includes(flag)) {
+        let route = input.textContent.split(":");
+        console.log(route[0]);
+        input.innerHTML = route[0] + `/` + flag + ":";
+        inUseRoute = route[0] + `/` + flag;
+    } else {
+        return new Error ('this command is not available.');
+    }
+    function goDirectoryDefault() {
+        routeToShow = "raulrexulon";
+    }
+}
+
+function mkdir() {
 
 }
 
@@ -58,6 +87,7 @@ function mv() {
 function clear() {
     document.querySelectorAll('.display-terminal p').forEach(e => e.remove())
 }
+
 function help(){
     const help=`These shell commands are defined internally.  Type 'help' to see this list.
     Type 'help name' to find out more about the function 'name'.
@@ -106,4 +136,37 @@ function help(){
     help [-dms] [pattern ...]                                                                                                       { COMMANDS ; }`;
     console.log(help)
     input.insertAdjacentHTML("beforebegin", `<pre>${help}</pre>`)
+}
+
+// Function to store in local storage the dyrectorys
+
+function updateObject() {
+    if(localStorage.getItem("directory") === null) {
+        let raulrexulonString = JSON.stringify(raulrexulon);
+        localStorage.setItem("directory", raulrexulonString);
+    } else {
+        raulrexulon = JSON.parse(localStorage.getItem("directory"));
+    }
+}
+
+//Function to have al the directorys
+
+function dotify(obj) {
+    const res = {};
+    function recurse(obj, current) {
+        for (const key in obj) {
+            const value = obj[key];
+            if(value != undefined) {
+                const newKey = (current ? current + '/' + key : key);
+                if (value && typeof value === 'object') {
+                    res[newKey] = value;
+                    recurse(value, newKey);
+                } else {
+                    res[newKey] = value;
+                }
+            }
+        }
+    }
+    recurse(obj);
+    return res;
 }
