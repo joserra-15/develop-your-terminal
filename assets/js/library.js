@@ -22,7 +22,7 @@ const input = document.querySelector('.display-terminal label');
 
 window.addEventListener('keypress', (e) => {
     if (e.key == 'Enter') {
-        let i = e.target.value, cmd = i.split(' ')[0], arg = i.split(' ')[1]
+        let i = e.target.value, cmd = i.split(' ')[0], arg = i.split(' ')[1] || ' '
         let p = document.createElement('p')
         p.textContent = `>raulrexulon: ${cmd} ${arg}`
         input.insertAdjacentElement('beforebegin', p)
@@ -59,5 +59,5 @@ function library(cmd, arg1 = '') {
 
     }
 
-    history()
+    // history()
 }
