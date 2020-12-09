@@ -18,49 +18,46 @@
 // The user can both move files / directories or modify their name
 // clear
 // If the user executes the "clear" command, the previous records WON’T be deleted from localStorage, it only clears visually in Terminal.
+const input = document.querySelector('.display-terminal label');
+
+window.addEventListener('keypress', (e) => {
+    if (e.key == 'Enter') {
+        let i = e.target.value, cmd = i.split(' ')[0], arg = i.split(' ')[1]
+        let p = document.createElement('p')
+        p.textContent = `>raulrexulon: ${cmd} ${arg}`
+        input.insertAdjacentElement('beforebegin', p)
+        let result = document.createElement('p')
+        result.textContent = library(cmd, arg)
+        input.insertAdjacentElement('beforebegin', result)
+        e.target.value = ''
+    }
+})
+
 
 function library(cmd, arg1 = '') {
     switch(cmd) {
         case 'pwd':
-            pwd()
-            break;
+            return pwd()
         case 'ls':
-            ls(arg1) 
-            break;
+            return ls(arg1) 
         case 'cd':
-            cd(arg1)
-            break;
+            return cd(arg1)
         case 'mkdir':
-            mkdir(arg1)
-            break;
+            return mkdir(arg1)
         case 'echo':
-            echo(arg1)  // echo "my name is yogi" > text.txt
-            break;
+            return echo(arg1)  // echo "my name is yogi" > text.txt
         case 'cat':
-            cat(arg1) // cat text.txt
-            break;
+            return cat(arg1) // cat text.txt
         case 'rm':
-            rm(arg1)
-            break;
+            return rm(arg1)
         case 'mv':
-            mv(arg1) // mv text.txt /my/new/folder
-            break;
+            return mv(arg1) // mv text.txt /my/new/folder
         case 'clear':
-            clear()
-            break;
+            return clear()
         default:
             return new Error('this command is not available.')
 
     }
 
-    // history()
+    history()
 }
-
-// let history = []
-// let counter = 0
-// window.addEventListener('keypress', (e)=> {
-//     if(e.key = 'Up'){
-//         counter++
-//         console.log(history[history.length - counter])
-//     }
-// })
