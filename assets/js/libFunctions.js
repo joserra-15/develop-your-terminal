@@ -27,7 +27,7 @@ function pwd() {
 
 function ls(flag) {
     let routeObject = "directoryObject";
-    route = inUseRoute.split("").slice(1).join("");
+    let route = inUseRoute.split("").slice(1).join("");
     route = route.split("/");
     for (let i = 0; i < route.length; i++) {
         routeObject += "[" + "'" + route[i] + "'" + "]";
