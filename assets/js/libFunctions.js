@@ -1,15 +1,18 @@
 // Create the object to simulate directorys
 
 let directoryObject = {
-    "raulrexulon": {
-        "Desktop" : {"Mierdas": {}, "No Mierdas": {}},
-        "Documents Mi Abuela": {"Mierdas": {"1": "1", "2": "2", "3": "3"}, "No Mierdas": {}},
-        "Downloads": {}
-    }
+    "raulrexulon": {}
 };
+let metaData = [];
 //updateObject();
 
-
+class MetaDataObject {
+    constructor(name, time, size) {
+        this.name = name;
+        this.time = time;
+        this.size = size;
+    }
+}
 
 // create variables
 
@@ -36,7 +39,8 @@ function ls(flag) {
     for (let i = 0; i < route.length; i++) {
         routeObject += "[" + "'" + route[i] + "'" + "]";
     }
-    switch(flag) {
+    console.log(routeObject);
+    switch (flag) {
         case "-R":
             return "Estamos haciendo un ls -R"
         case "-S":
@@ -48,11 +52,13 @@ function ls(flag) {
         default:
             return new Error('this command is not available.');
     }
+
     function printFolders() {
         let folder = Object.keys(eval(routeObject));
-        console.log(folder)
-        if(folder[0] === "0" || folder.length === 0) {
-            return new Error ('there are not folder/files abiable.');
+        console.log(Object.keys(eval(routeObject)));
+        console.log(folder);
+        if (folder[0] === "0" || folder.length === 0) {
+            return new Error('there are not folder/files abiable.');
         } else {
             folder.forEach(e => {
                 let p = document.createElement('p');
@@ -67,7 +73,7 @@ function cd(flag) {
     let route = inUseRoute.split("").slice(1).join("");
     let absoluteFlag = "";
 
-    if(flag.length > 0 && flag[0] === "/") {
+    if (flag.length > 0 && flag[0] === "/") {
         absoluteFlag = flag;
         absoluteFlag = absoluteFlag.split("").slice(1).join("");
     }
@@ -76,7 +82,7 @@ function cd(flag) {
         return goDirectoryDefault();
     } else if (flag === "..") {
         if (input.textContent === ">raulrexulon:") {
-            return new Error ('you are in the root directory.');
+            return new Error('you are in the root directory.');
         } else {
             let route = inUseRoute.split("/");
             route.pop();
@@ -84,7 +90,7 @@ function cd(flag) {
             input.innerHTML = "";
             inUseRoute = "";
             route.forEach(e => {
-                if(e === route[route.length - 1]) {
+                if (e === route[route.length - 1]) {
                     input.innerHTML += `${e}`;
                     inUseRoute += `${e}`;
                     input.innerHTML += ":";
@@ -99,20 +105,76 @@ function cd(flag) {
         input.innerHTML = route[0] + `/` + flag + ":";
         inUseRoute = route[0] + `/` + flag;
         console.log(inUseRoute);
-    } else if(flag.length > 0 && flag[0] === "/" && rutas.includes(absoluteFlag)) {
+    } else if (flag.length > 0 && flag[0] === "/" && rutas.includes(absoluteFlag)) {
         inUseRoute = `>${absoluteFlag}`;
         input.innerHTML = `>${absoluteFlag}:`;
     } else {
-        return new Error ('this command is not available.');
+        return new Error('this command is not available.');
     }
+
     function goDirectoryDefault() {
         inUseRoute = `>raulrexulon`;
         input.innerHTML = `>raulrexulon:`;
     }
 }
 
-function mkdir() {
+function mkdir(flag) {
+    let route = inUseRoute.split("").slice(1).join("");
+    let absoluteFlag = "";
 
+    if (flag.length > 0 && flag[0] === "/") {
+        absoluteFlag = flag;
+        absoluteFlag = absoluteFlag.split("").slice(1).join("");
+    }
+    if (flag.length > 0 && flag[0] === "/" && rutas.includes(absoluteFlag)) {
+        return new Error('this directory/file allready exist.');
+    } else if (flag.length > 0 && flag[0] === "/" && !rutas.includes(absoluteFlag)) {
+        if (flag[1] !== "r") {
+            return new Error('you can´t create a new root.');
+        } else {
+            console.log('aqui 2')
+            let otherRoute = flag.split('').slice(1).join('');
+            otherRoute = otherRoute.split("/");
+            console.log(otherRoute);
+            let routeObject = "directoryObject";
+            let routeToCompare = "";
+            for (let i = 0; i < otherRoute.length; i++) {
+                let newRouteObject = routeObject;
+                if(i===0) {
+                    routeToCompare += otherRoute[i];
+                } else {
+                    routeToCompare += "/" + otherRoute[i];
+                }
+                newRouteObject += "[" + "'" + otherRoute[i] + "'" + "]";
+                routeObject = newRouteObject;
+                newRouteObject += "={}";
+                console.log(newRouteObject);
+                if(rutas.includes(routeToCompare)) {
+                    continue;
+                } else {
+                    eval(newRouteObject);
+                }
+            }
+            let manolo = dotify(directoryObject);
+            rutas = Object.keys(manolo);
+        }
+    } else if (flag.length > 0 && !rutas.includes(`${route}/${flag}`)) {
+        let routeObject = "directoryObject";
+        route = route.split('/');
+        for(let i=0; i<route.length; i++){
+            routeObject += "[" + "'" + route[i] + "'" + "]";
+        }
+        routeObject += "[" + "'" + flag + "'" + "]";
+        routeObject += "={}";
+        let actualTime = new Date().getTime();
+        /* let metaDataFile = new MetaDataObject(flag, actualTime, 0);
+        metaData.push(metaDataFile); */
+        eval(routeObject);
+        let manolo = dotify(directoryObject);
+        rutas = Object.keys(manolo);
+    } else if (flag.length > 0 && rutas.includes(`${route}/${flag}`)) {
+        return new Error('this directory/file allready exist.');
+    }
 }
 
 function echo() {
@@ -182,8 +244,8 @@ function clear() {
     document.querySelectorAll('.display-terminal p').forEach(e => e.remove())
 }
 
-function help(){
-    const help=`These shell commands are defined internally.  Type 'help' to see this list.
+function help() {
+    const help = `These shell commands are defined internally.  Type 'help' to see this list.
     Type 'help name' to find out more about the function 'name'.
     Use 'info bash' to find out more about the shell in general.
     Use 'man -k' or 'info' to find out more about commands not in this list.
@@ -235,7 +297,7 @@ function help(){
 // Function to store in local storage the dyrectorys
 
 function updateObject() {
-    if(localStorage.getItem("directory") === null) {
+    if (localStorage.getItem("directory") === null) {
         let raulrexulonString = JSON.stringify(raulrexulon);
         localStorage.setItem("directory", raulrexulonString);
     } else {
@@ -247,10 +309,11 @@ function updateObject() {
 
 function dotify(obj) {
     const res = {};
+
     function recurse(obj, current) {
         for (const key in obj) {
             const value = obj[key];
-            if(value != undefined) {
+            if (value != undefined) {
                 const newKey = (current ? current + '/' + key : key);
                 if (value && typeof value === 'object') {
                     res[newKey] = value;
