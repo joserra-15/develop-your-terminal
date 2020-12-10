@@ -16,8 +16,12 @@ let directoryObject = {
 let inUseRoute = `>raulrexulon`;
 let manolo = dotify(directoryObject);
 let rutas = Object.keys(manolo);
-console.log(rutas);
-
+updateRutas();
+//update rutas
+function updateRutas(){
+    rutas = Object.keys(dotify(directoryObject));
+    console.log(rutas);
+}
 
 // individual functions
 
@@ -123,8 +127,55 @@ function rm() {
 
 }
 
-function mv() {
-
+function mv(flag) {
+    let routeObject = "directoryObject";
+    route = inUseRoute.split("").slice(1).join("");
+    route = route.split("/");
+    for (let i = 0; i < route.length; i++) {
+        routeObject += "[" + "'" + route[i] + "'" + "]";
+    }
+    let words=flag.split("--")
+    if(checkWords(words[0].trim())){
+        if(words[1].trim().includes("/")){
+            let finalRoute= words[1].trim()
+            if(finalRoute[0]==="/" && finalRoute[finalRoute.length -1]!== "/" ){
+                finalRoute=finalRoute.slice(1)
+                if(rutas.filter(e=>e===finalRoute)!==0){
+                    let nRoute = "directoryObject";
+                    finalRoute = finalRoute.split("/");
+                    for (let i = 0; i < finalRoute.length; i++) {
+                        nRoute += "[" + "'" + finalRoute[i] + "'" + "]";
+                    }
+                    console.log(nRoute)
+                    eval(nRoute + "[" + "'" + words[0].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("+routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
+                    eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
+                    updateRutas()
+                }else{return new Error (`mv: No such file or directory`);}
+            }else{return new Error (`mv: need to start with '/' and finish without '/': No such file or directory`);}
+        }else if(checkWords(words[1].trim())){
+            eval(routeObject + "[" + "'" + words[1].trim() + "'" + "]" + "[" + "'" + words[0].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("
+            +routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
+            eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
+            updateRutas()
+        }else{
+            eval(routeObject + "[" + "'" + words[1].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("
+            +routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
+            eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
+            updateRutas()
+        }
+    }else{
+        return new Error (`mv: cannot stat '${words[0]}': No such file or directory`);
+    }
+    function checkWords(word){
+        let value=false
+        Object.keys(eval(routeObject)).forEach(e=>{
+            if(e===word){
+                value=true
+            }
+        })
+        console.log(value)
+        return value
+    }
 }
 
 function clear() {
@@ -178,7 +229,7 @@ function help(){
     hash [-lr] [-p pathname] [-dt] [name ...]                                                                                       while COMMANDS; do COMMANDS; done
     help [-dms] [pattern ...]                                                                                                       { COMMANDS ; }`;
     console.log(help)
-    input.insertAdjacentHTML("beforebegin", `<pre>${help}</pre>`)
+    input.insertAdjacentHTML("beforebegin", `<p>${help}</p>`)
 }
 
 // Function to store in local storage the dyrectorys
