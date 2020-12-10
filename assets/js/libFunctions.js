@@ -14,7 +14,7 @@ let directoryObject = {
 // create variables
 
 let directoryRoot = true;
-let inUseRoute = `raulrexulon`;
+let inUseRoute = `>raulrexulon`;
 let manolo = dotify(directoryObject);
 let rutas = Object.keys(manolo);
 console.log(rutas);
@@ -29,7 +29,7 @@ function pwd() {
 function ls(flag) {
     let routeObject = "directoryObject", route;
     if(directoryRoot === true) {
-        route = inUseRoute.split("").slice(0).join("");
+        route = inUseRoute.split("").slice(1).join("");
     } else {
         route = inUseRoute.split("").slice(1).join("");
     }
@@ -64,10 +64,15 @@ function cd(flag) {
     if (flag.length === 0) {
         return goDirectoryDefault();
     } else if (flag === "..") {
-        inUseRoute = inUseRoute.split("/");
-        inUseRoute.pop();
-        inUseRoute.join("/");
-        input.innerHTML = inUseRoute + ":";
+        let route = inUseRoute.split("/");
+        route.pop();
+        route.join("/");
+        input.innerHTML = route + ":";
+        inUseRoute = route[0];
+        if (input.textContent === ">raulrexulon:") {
+            directoryRoot = true;
+            console.log(inUseRoute);
+        }
     } else if (flag.length > 0 && rutas.includes(`${inUseRoute}/${flag}`)) {
         let route = input.textContent.split(":");
         input.innerHTML = route[0] + `/` + flag + ":";
@@ -77,7 +82,7 @@ function cd(flag) {
         return new Error ('this command is not available.');
     }
     function goDirectoryDefault() {
-        inUseRoute = `raulrexulon`;
+        inUseRoute = `>raulrexulon`;
         input.innerHTML = `>raulrexulon:`;
         directoryRoot = true;
     }
