@@ -46,16 +46,28 @@ function ls(flag) {
     }
     function printFolders() {
         let folder = Object.keys(eval(routeObject));
-        folder.forEach(e => {
-            let p = document.createElement('p');
-            p.textContent = e;
-            input.insertAdjacentElement('beforebegin', p);
-        })
+        console.log(folder)
+        if(folder[0] === "0" || folder.length === 0) {
+            return new Error ('there are not folder/files abiable.');
+        } else {
+            folder.forEach(e => {
+                let p = document.createElement('p');
+                p.textContent = e;
+                input.insertAdjacentElement('beforebegin', p);
+            })
+        }
     }
 }
 
 function cd(flag) {
     let route = inUseRoute.split("").slice(1).join("");
+    let absoluteFlag = "";
+
+    if(flag.length > 0 && flag[0] === "/") {
+        absoluteFlag = flag;
+        absoluteFlag = absoluteFlag.split("").slice(1).join("");
+    }
+
     if (flag.length === 0) {
         return goDirectoryDefault();
     } else if (flag === "..") {
@@ -78,12 +90,14 @@ function cd(flag) {
                 }
             })
         }
-        console.log(inUseRoute);
     } else if (flag.length > 0 && rutas.includes(`${route}/${flag}`)) {
         let route = input.textContent.split(":");
         input.innerHTML = route[0] + `/` + flag + ":";
         inUseRoute = route[0] + `/` + flag;
         console.log(inUseRoute);
+    } else if(flag.length > 0 && flag[0] === "/" && rutas.includes(absoluteFlag)) {
+        inUseRoute = `>${absoluteFlag}`;
+        input.innerHTML = `>${absoluteFlag}:`;
     } else {
         return new Error ('this command is not available.');
     }
