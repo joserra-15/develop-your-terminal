@@ -29,7 +29,6 @@ function ls(flag) {
     let routeObject = "directoryObject";
     route = inUseRoute.split("").slice(1).join("");
     route = route.split("/");
-    console.log(route);
     for (let i = 0; i < route.length; i++) {
         routeObject += "[" + "'" + route[i] + "'" + "]";
     }
@@ -60,18 +59,31 @@ function cd(flag) {
     if (flag.length === 0) {
         return goDirectoryDefault();
     } else if (flag === "..") {
-        let route = inUseRoute.split("/");
-        route.pop();
-        route.join("/");
-        input.innerHTML = route + ":";
-        inUseRoute = route[0];
         if (input.textContent === ">raulrexulon:") {
-            console.log(inUseRoute);
+            return new Error ('you are in the root directory.');
+        } else {
+            let route = inUseRoute.split("/");
+            route.pop();
+            route.join("/");
+            input.innerHTML = "";
+            inUseRoute = "";
+            route.forEach(e => {
+                if(e === route[route.length - 1]) {
+                    input.innerHTML += `${e}`;
+                    inUseRoute += `${e}`;
+                    input.innerHTML += ":";
+                } else {
+                    input.innerHTML += `${e}/`;
+                    inUseRoute += `${e}/`;
+                }
+            })
         }
+        console.log(inUseRoute);
     } else if (flag.length > 0 && rutas.includes(`${route}/${flag}`)) {
         let route = input.textContent.split(":");
         input.innerHTML = route[0] + `/` + flag + ":";
         inUseRoute = route[0] + `/` + flag;
+        console.log(inUseRoute);
     } else {
         return new Error ('this command is not available.');
     }
