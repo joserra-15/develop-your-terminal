@@ -67,7 +67,5 @@ function library(cmd, arg1 = '') {
             return help()
         default:
             return new Error('this command is not available.')
-
     }
-
 }
