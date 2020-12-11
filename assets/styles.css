@@ -78,3 +78,7 @@ body{
 .display-terminal__input:focus{
     outline: none;
 }
+
+.cmatrix{
+    background: url(https://media.giphy.com/media/AOSwwqVjNZlDO/giphy.gif)
+}

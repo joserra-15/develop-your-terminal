@@ -355,3 +355,12 @@ function storeMetadata(flag){
     let metaDataFile = new MetaDataObject(flag, actualTime, 0);
     metaData.push(metaDataFile);
 }
+
+function cmatrix(flag){
+    if(flag==="q"){
+        document.querySelector('.display-terminal').classList.remove("cmatrix")
+    }else if(flag===""){
+        document.querySelector('.display-terminal').classList.add("cmatrix")
+        clear()
+    }
+}
