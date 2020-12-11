@@ -31,7 +31,7 @@ window.addEventListener('keypress', (e) => {
             library(cmd, arg)
         } else {
             let p = document.createElement('p')
-            p.textContent = `>raulrexulon: ${cmd} ${arg}`
+            p.textContent = `${inUseRoute}: ${cmd} ${arg}`
             input.insertAdjacentElement('beforebegin', p)
             let result = document.createElement('p')
             result.textContent = library(cmd, arg)
