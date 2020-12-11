@@ -186,8 +186,42 @@ function cat() {
 
 }
 
-function rm() {
-
+function rm(flag) {
+    let routeObject = "directoryObject";
+    route = inUseRoute.split("").slice(1).join("");
+    route = route.split("/");
+    for (let i = 0; i < route.length; i++) {
+        routeObject += "[" + "'" + route[i] + "'" + "]";
+    }
+    if(flag.includes('/')) {
+        if(flag[0] === "/" && flag[flag.length -1]!== "/") {
+            flag = flag.slice(1);
+            if(rutas.filter(e=>e===flag).length !==0){
+                routeObject = "directoryObject";
+                flag = flag.split("/");
+                for (let i = 0; i < flag.length; i++) {
+                    routeObject += "[" + "'" + flag[i] + "'" + "]";
+                }
+                eval("delete "+ routeObject);
+                updateRutas();
+            } else {return new Error (`rm: No such file or directory`);}
+        } else {return new Error (`rm: need to start with '/' and finish without '/': No such file or directory`);}
+    } else {
+        let value = false;
+        console.log(routeObject);
+        Object.keys(eval(routeObject)).forEach(e=>{
+            console.log(e);
+            console.log(flag);
+            if(e===flag){
+                value = true;
+            }
+        })
+        if(value){
+            console.log(routeObject + "[" + "'" + flag + "'" + "]");
+            eval("delete "+ routeObject + "[" + "'" + flag + "'" + "]");
+            updateRutas();
+        } else {return new Error (`rm: cannot start '${flag}': No such file or directory`);}
+    }
 }
 
 function mv(flag) {
