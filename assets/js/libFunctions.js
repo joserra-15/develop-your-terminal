@@ -191,10 +191,17 @@ function echo(flag) {
     if (newFlag[1].length > 0 && newFlag[1][0] === "/" && rutas.includes(absoluteFlag)) {
         
         let routeObject = "directoryObject";
+        let routeToCompare = "";
         absoluteFlag = absoluteFlag.split('/');
         for(let i=0; i < absoluteFlag.length; i++){
+            if(i===0) {
+                routeToCompare += absoluteFlag[i];
+            } else {
+                routeToCompare += "/" + absoluteFlag[i];
+            }
             routeObject += "[" + "'" + absoluteFlag[i] + "'" + "]";
         }
+        storeMetadata(routeToCompare);
         routeObject += ` = ${newFlag[0]}`
         eval(routeObject)
         updateLocalStorage();
@@ -228,6 +235,8 @@ function echo(flag) {
                     eval(newRouteObject);
                 }
             }
+            routeToCompare += "/" + otherRoute[otherRoute.length - 1];
+            storeMetadata(routeToCompare);
             routeObject += "[" + "'" + otherRoute[otherRoute.length - 1] + "'" + "]";
             routeObject += ` = ${newFlag[0]}`
             eval(routeObject)
