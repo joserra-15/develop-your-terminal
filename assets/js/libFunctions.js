@@ -177,8 +177,45 @@ function mkdir(flag) {
     }
 }
 
-function echo() {
+function echo(flag) {
+    let newFlag = flag.split(">")
 
+    let route = inUseRoute.split("").slice(1).join("");
+    let absoluteFlag = "";
+
+    if (newFlag[1].length > 0 && newFlag[1][0] === "/") {
+        absoluteFlag = newFlag[1];
+        absoluteFlag = absoluteFlag.split("").slice(1).join("");
+    }
+    if (newFlag[1].length > 0 && newFlag[1][0] === "/" && rutas.includes(absoluteFlag)) {
+        
+        return //write text inside
+
+    } else if (newFlag[1].length > 0 && newFlag[1][0] === "/" && !rutas.includes(absoluteFlag)) {
+        
+        mkdir(newFlag[1])
+
+    } else if (newFlag[1].length > 0 && !rutas.includes(`${route}/${newFlag[1]}`)) {
+        let routeObject = "directoryObject";
+        route = route.split('/');
+        for(let i=0; i<route.length; i++){
+            routeObject += "[" + "'" + route[i] + "'" + "]";
+        }
+        routeObject += "[" + "'" + newFlag[1] + "'" + "]";
+        routeObject += "={}";
+        let actualTime = new Date().getTime();
+        /* let metaDataFile = new MetaDataObject(flag, actualTime, 0);
+        metaData.push(metaDataFile); */
+        eval(routeObject);
+        let manolo = dotify(directoryObject);
+        rutas = Object.keys(manolo);
+    } else if (flag.length > 0 && rutas.includes(`${route}/${newFlag[1]}`)) {
+        return //write text here
+    }
+
+
+
+    // console(`${route}/${flag}`)
 }
 
 function cat() {
