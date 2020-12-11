@@ -417,10 +417,10 @@ function clear() {
 function help() {
     const help = `These shell commands are defined internally.  Type 'help' to see this list.
     cat
-    cd [dir]
+    cd
     clear
-    echo [arg ...]
-    help [pattern ...]
+    echo
+    help
     ls
     mkdir
     mv
