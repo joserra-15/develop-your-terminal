@@ -280,22 +280,99 @@ function mv(flag) {
 
 function clear() {
     document.querySelectorAll('.display-terminal p').forEach(e => e.remove())
+    document.querySelectorAll('.display-terminal pre').forEach(e => e.remove())
 }
 
 function help() {
     const help = `These shell commands are defined internally.  Type 'help' to see this list.
-    
     cat
-    cd [-L|[-P [-e]] [-@]] [dir]
+    cd [dir]
     clear
-    echo [-neE] [arg ...]
-    help [-dms] [pattern ...]
+    echo [arg ...]
+    help [pattern ...]
     ls
     mkdir
     mv
-    pwd [-LP]
-    rm`;
-    input.insertAdjacentHTML("beforebegin", `<p>${help}</p>`)
+    pwd
+    rm
+    cmatrix
+    ckirby`;
+    input.insertAdjacentHTML("beforebegin", `<pre>${help}</pre>`)
+}
+
+function man(flag) {
+    switch (flag) {
+        case "pwd":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Print the name of the current working directory.</pre>`);
+            break;
+        case "ls":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>List information about the FILEs (the current directory by default).
+ls [OPTION]... [FILE]...
+Optional parameters:
+* ls -R: list subdirectories recursively.
+* ls -S: sort by file size, largest first.
+* ls -t: sort by time, newest first; see --time.</pre>`);
+            break;
+        case "cd":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Change the shell working directory.
+cd [dir]
+Change the current directory to DIR.  The default DIR is the value
+of the HOME shell variable.
+'cd ..' is processed by removing the immediately previous pathname
+component back to a slash or the beginning of DIR.</pre>`);
+            break;
+        case "mkdir":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Create the DIRECTORY(ies), if they do not already exist.
+mkdir DIRECTORY...</pre>`);
+            break;
+        case "echo":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Write arguments to the standard output.
+Display the ARGs, separated by a single space character and
+followed by a newline, on the standard output.
+echo [arg ...]</pre>`);
+            break;
+        case "cat":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Concatenate FILE(s) to standard output.
+cat [FILE]...</pre>`);
+            break;
+        case "rm":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Remove each specified file.
+rm [FILE]...</pre>`);
+            break;
+        case "mv":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Move SOURCE(s) to DIRECTORY.
+mv SOURCE... DIRECTORY</pre>`);
+            break;
+        case "clear":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Clear your screen if this is possible, including
+its scrollback buffer.</pre>`);
+            break;
+        case "help":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Display information about builtin commands.</pre>`);
+            break;
+        case "cmatrix":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>To change background to cmatrix.
+Command to exit:
+cmatrix q</pre>`);
+            break;
+        case "ckirby":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>Show an image of Kirby in your screen. It is the titular
+protagonist of the Kirby series of video games owned by
+Nintendo and HAL Laboratory.</pre>`);
+            break;
+    }
 }
 
 // Function to store in local storage the dyrectorys adn to update it from local storage

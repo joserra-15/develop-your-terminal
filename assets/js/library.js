@@ -67,6 +67,8 @@ function library(cmd, arg1 = '') {
             return help()
         case 'cmatrix':
             return cmatrix(arg1)
+        case 'man':
+            return man(arg1)
         default:
             return new Error('this command is not available.')
     }
