@@ -559,3 +559,4 @@ function ckirby(){
     </pre>`)
 }
 //TODO: Preguntar a jose bien sobre el funcionamiento de remove.(carpeta final o todo el absolute path).
+//TODO: Ver con jose la parte de rutas para comparar en vez del JSON.
