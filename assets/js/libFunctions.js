@@ -1,10 +1,11 @@
+//TODO: AÑADIR METADATA, ACABAR LS.
 // Create the object to simulate directorys
 
-let directoryObject = {
-    "raulrexulon": {}
-};
-let metaData = [];
-//updateObject();
+let directoryObject = {"raulrexulon": {}};
+let metaData = [{"name": "raulrexulon", "time": 1607677301663, "size": 0}];
+updateObject();
+updateMetadata();
+updateLocalStorage();
 
 class MetaDataObject {
     constructor(name, time, size) {
@@ -17,10 +18,10 @@ class MetaDataObject {
 // create variables
 
 let inUseRoute = `>raulrexulon`;
-let manolo = dotify(directoryObject);
-let rutas = Object.keys(manolo);
+let rutas;
 updateRutas();
-//update rutas
+
+//function to update rutas
 function updateRutas(){
     rutas = Object.keys(dotify(directoryObject));
     console.log(rutas);
@@ -152,30 +153,32 @@ function mkdir(flag) {
                 if(rutas.includes(routeToCompare)) {
                     continue;
                 } else {
+                    storeMetadata(routeToCompare);
                     eval(newRouteObject);
                 }
             }
-            let manolo = dotify(directoryObject);
-            rutas = Object.keys(manolo);
+            updateLocalStorage();
+            updateRutas();
         }
     } else if (flag.length > 0 && !rutas.includes(`${route}/${flag}`)) {
         let routeObject = "directoryObject";
+        let routeName = `${route}/${flag}`;
         route = route.split('/');
         for(let i=0; i<route.length; i++){
             routeObject += "[" + "'" + route[i] + "'" + "]";
         }
         routeObject += "[" + "'" + flag + "'" + "]";
         routeObject += "={}";
-        let actualTime = new Date().getTime();
-        /* let metaDataFile = new MetaDataObject(flag, actualTime, 0);
-        metaData.push(metaDataFile); */
+        storeMetadata(routeName);
         eval(routeObject);
-        let manolo = dotify(directoryObject);
-        rutas = Object.keys(manolo);
+        updateLocalStorage();
+        updateRutas();
     } else if (flag.length > 0 && rutas.includes(`${route}/${flag}`)) {
         return new Error('this directory/file allready exist.');
     }
 }
+
+
 
 function echo(flag) {
     let newFlag = flag.split(">")
@@ -222,8 +225,42 @@ function cat() {
 
 }
 
-function rm() {
-
+function rm(flag) {
+    let routeObject = "directoryObject";
+    route = inUseRoute.split("").slice(1).join("");
+    route = route.split("/");
+    for (let i = 0; i < route.length; i++) {
+        routeObject += "[" + "'" + route[i] + "'" + "]";
+    }
+    if(flag.includes('/')) {
+        if(flag[0] === "/" && flag[flag.length -1]!== "/") {
+            flag = flag.slice(1);
+            if(rutas.filter(e=>e===flag).length !==0){
+                routeObject = "directoryObject";
+                flag = flag.split("/");
+                for (let i = 0; i < flag.length; i++) {
+                    routeObject += "[" + "'" + flag[i] + "'" + "]";
+                }
+                eval("delete "+ routeObject);
+                updateRutas();
+            } else {return new Error (`rm: No such file or directory`);}
+        } else {return new Error (`rm: need to start with '/' and finish without '/': No such file or directory`);}
+    } else {
+        let value = false;
+        console.log(routeObject);
+        Object.keys(eval(routeObject)).forEach(e=>{
+            console.log(e);
+            console.log(flag);
+            if(e===flag){
+                value = true;
+            }
+        })
+        if(value){
+            console.log(routeObject + "[" + "'" + flag + "'" + "]");
+            eval("delete "+ routeObject + "[" + "'" + flag + "'" + "]");
+            updateRutas();
+        } else {return new Error (`rm: cannot start '${flag}': No such file or directory`);}
+    }
 }
 
 function mv(flag) {
@@ -248,6 +285,7 @@ function mv(flag) {
                     console.log(nRoute)
                     eval(nRoute + "[" + "'" + words[0].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("+routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
                     eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
+                    updateLocalStorage()
                     updateRutas()
                 }else{return new Error (`mv: No such file or directory`);}
             }else{return new Error (`mv: need to start with '/' and finish without '/': No such file or directory`);}
@@ -255,11 +293,13 @@ function mv(flag) {
             eval(routeObject + "[" + "'" + words[1].trim() + "'" + "]" + "[" + "'" + words[0].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("
             +routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
             eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
+            updateLocalStorage()
             updateRutas()
         }else{
             eval(routeObject + "[" + "'" + words[1].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("
             +routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
             eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
+            updateLocalStorage()
             updateRutas()
         }
     }else{
@@ -283,62 +323,45 @@ function clear() {
 
 function help() {
     const help = `These shell commands are defined internally.  Type 'help' to see this list.
-    Type 'help name' to find out more about the function 'name'.
-    Use 'info bash' to find out more about the shell in general.
-    Use 'man -k' or 'info' to find out more about commands not in this list.
-
-    A star (*) next to a name means that the command is disabled.
-
-    job_spec [&]                                                                                                                    history [-c] [-d offset] [n] or history -anrw [filename] or history -ps arg [arg...]
-    (( expression ))                                                                                                                if COMMANDS; then COMMANDS; [ elif COMMANDS; then COMMANDS; ]... [ else COMMANDS; ] fi
-    . filename [arguments]                                                                                                          jobs [-lnprs] [jobspec ...] or jobs -x command [args]
-    :                                                                                                                               kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]
-    [ arg... ]                                                                                                                      let arg [arg ...]
-    [[ expression ]]                                                                                                                local [option] name[=value] ...
-    alias [-p] [name[=value] ... ]                                                                                                  logout [n]
-    bg [job_spec ...]                                                                                                               mapfile [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd] [-C callback] [-c quantum] [array]
-    bind [-lpsvPSVX] [-m keymap] [-f filename] [-q name] [-u name] [-r keyseq] [-x keyseq:shell-command] [keyseq:readline-functio>  popd [-n] [+N | -N]
-    break [n]                                                                                                                       printf [-v var] format [arguments]
-    builtin [shell-builtin [arg ...]]                                                                                               pushd [-n] [+N | -N | dir]
-    caller [expr]                                                                                                                   pwd [-LP]
-    case WORD in [PATTERN [| PATTERN]...) COMMANDS ;;]... esac                                                                      read [-ers] [-a array] [-d delim] [-i text] [-n nchars] [-N nchars] [-p prompt] [-t timeout] [-u fd] [name ...]
-    cd [-L|[-P [-e]] [-@]] [dir]                                                                                                    readarray [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd] [-C callback] [-c quantum] [array]
-    command [-pVv] command [arg ...]                                                                                                readonly [-aAf] [name[=value] ...] or readonly -p
-    compgen [-abcdefgjksuv] [-o option] [-A action] [-G globpat] [-W wordlist]  [-F function] [-C command] [-X filterpat] [-P pre>  return [n]
-    complete [-abcdefgjksuv] [-pr] [-DEI] [-o option] [-A action] [-G globpat] [-W wordlist]  [-F function] [-C command] [-X filt>  select NAME [in WORDS ... ;] do COMMANDS; done
-    compopt [-o|+o option] [-DEI] [name ...]                                                                                        set [-abefhkmnptuvxBCHP] [-o option-name] [--] [arg ...]
-    continue [n]                                                                                                                    shift [n]
-    coproc [NAME] command [redirections]                                                                                            shopt [-pqsu] [-o] [optname ...]
-    declare [-aAfFgilnrtux] [-p] [name[=value] ...]                                                                                 source filename [arguments]
-    dirs [-clpv] [+N] [-N]                                                                                                          suspend [-f]
-    disown [-h] [-ar] [jobspec ... | pid ...]                                                                                       test [expr]
-    echo [-neE] [arg ...]                                                                                                           time [-p] pipeline
-    enable [-a] [-dnps] [-f filename] [name ...]                                                                                    times
-    eval [arg ...]                                                                                                                  trap [-lp] [[arg] signal_spec ...]
-    exec [-cl] [-a name] [command [arguments ...]] [redirection ...]                                                                true
-    exit [n]                                                                                                                        type [-afptP] name [name ...]
-    export [-fn] [name[=value] ...] or export -p                                                                                    typeset [-aAfFgilnrtux] [-p] name[=value] ...
-    false                                                                                                                           ulimit [-SHabcdefiklmnpqrstuvxPT] [limit]
-    fc [-e ename] [-lnr] [first] [last] or fc -s [pat=rep] [command]                                                                umask [-p] [-S] [mode]
-    fg [job_spec]                                                                                                                   unalias [-a] name [name ...]
-    for NAME [in WORDS ... ] ; do COMMANDS; done                                                                                    unset [-f] [-v] [-n] [name ...]
-    for (( exp1; exp2; exp3 )); do COMMANDS; done                                                                                   until COMMANDS; do COMMANDS; done
-    function name { COMMANDS ; } or name () { COMMANDS ; }                                                                          variables - Names and meanings of some shell variables
-    getopts optstring name [arg]                                                                                                    wait [-fn] [id ...]
-    hash [-lr] [-p pathname] [-dt] [name ...]                                                                                       while COMMANDS; do COMMANDS; done
-    help [-dms] [pattern ...]                                                                                                       { COMMANDS ; }`;
-    console.log(help)
+    
+    cat
+    cd [-L|[-P [-e]] [-@]] [dir]
+    clear
+    echo [-neE] [arg ...]
+    help [-dms] [pattern ...]
+    ls
+    mkdir
+    mv
+    pwd [-LP]
+    rm`;
     input.insertAdjacentHTML("beforebegin", `<p>${help}</p>`)
 }
 
-// Function to store in local storage the dyrectorys
+
+// Function to store in local storage the dyrectorys adn to update it from local storage
 
 function updateObject() {
     if (localStorage.getItem("directory") === null) {
-        let raulrexulonString = JSON.stringify(raulrexulon);
-        localStorage.setItem("directory", raulrexulonString);
+        let directoryObjectString = JSON.stringify(directoryObject);
+        localStorage.setItem("directory", directoryObjectString);
     } else {
-        raulrexulon = JSON.parse(localStorage.getItem("directory"));
+        directoryObject = JSON.parse(localStorage.getItem("directory"));
+    }
+}
+
+function updateLocalStorage() {
+    let directoryObjectString = JSON.stringify(directoryObject);
+    let directoryMetadataString = JSON.stringify(metaData);
+    localStorage.setItem("directory", directoryObjectString);
+    localStorage.setItem("directoryMetadata", directoryMetadataString);
+}
+
+function updateMetadata() {
+    if (localStorage.getItem("directoryMetadata") === null) {
+        let directoryMetadataString = JSON.stringify(metaData);
+        localStorage.setItem("directoryMetadata", directoryMetadataString);
+    } else {
+        metaData = JSON.parse(localStorage.getItem("directoryMetadata"));
     }
 }
 
@@ -363,4 +386,24 @@ function dotify(obj) {
     }
     recurse(obj);
     return res;
+}
+
+// Function to store the metadata of the directory/file
+
+function storeMetadata(flag){
+    let actualTime = new Date().getTime();
+    let metaDataFile = new MetaDataObject(flag, actualTime, 0);
+    metaData.push(metaDataFile);
+}
+
+function cmatrix(flag){
+    if(flag==="q"){
+        document.querySelector('.display-terminal').classList.remove("cmatrix")
+        textarea.style.color= "lime";
+    }else if(flag===""){
+        document.querySelector('.display-terminal').classList.add("cmatrix")
+        textarea.style.color= "white";
+        clear()
+    }
+}
 }
