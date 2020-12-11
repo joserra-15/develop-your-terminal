@@ -1,6 +1,10 @@
+// Variable Definition
+
 let historyArray = [];
 let counter = 0;
 const textarea = document.querySelector('.display-terminal__input');
+
+// Define functions for update the history
 
 function history(cmd, arg) {
     if(arg === '') {
@@ -12,12 +16,13 @@ function history(cmd, arg) {
     localStorage.setItem('history', JSON.stringify(historyArray));
 }
 
+// Add event listner to the up and down press.
+
 window.addEventListener('keyup', controlHistory);
 
 function controlHistory(e) {
     if(historyArray.length !== 0) {
         if(e.keyCode == 38) {
-            //arrow up
             textarea.value= historyArray[counter];
             if(counter > 0) {
                 counter--;
