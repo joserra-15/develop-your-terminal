@@ -199,12 +199,15 @@ function rm(flag) {
                 flag = flag.slice(1);
                 if(rutas.filter(e=>e===flag).length !==0){
                     routeObject = "directoryObject";
+                    let routeToCompare = flag;
                     flag = flag.split("/");
                     for (let i = 0; i < flag.length; i++) {
                         routeObject += "[" + "'" + flag[i] + "'" + "]";
                     }
+                    deleteMetadata(routeToCompare);
                     eval("delete "+ routeObject);
                     updateRutas();
+                    updateLocalStorage();
                 } else {return new Error (`rm: No such file or directory`);}
             }else {return new Error (`rm: you can't remove root directory`);}
         } else {return new Error (`rm: need to start with '/' and finish without '/': No such file or directory`);}
@@ -220,8 +223,12 @@ function rm(flag) {
         })
         if(value){
             console.log(routeObject + "[" + "'" + flag + "'" + "]");
+            let routeToCompare = inUseRoute.split("").slice(1).join("");
+            routeToCompare += "/" + flag;
+            deleteMetadata(routeToCompare);
             eval("delete "+ routeObject + "[" + "'" + flag + "'" + "]");
             updateRutas();
+            updateLocalStorage();
         } else {return new Error (`rm: cannot start '${flag}': No such file or directory`);}
     }
 }
@@ -239,28 +246,44 @@ function mv(flag) {
             let finalRoute= words[1].trim()
             if(finalRoute[0]==="/" && finalRoute[finalRoute.length -1]!== "/" ){
                 finalRoute=finalRoute.slice(1)
+                console.log(finalRoute);
                 if(rutas.filter(e=>e===finalRoute)!==0){
                     let nRoute = "directoryObject";
+                    let routeToCompare = inUseRoute.split("").slice(1).join("");
+                    let newRoute = finalRoute + "/" + words[0].trim();
+                    routeToCompare += "/" + words[0].trim();
                     finalRoute = finalRoute.split("/");
                     for (let i = 0; i < finalRoute.length; i++) {
                         nRoute += "[" + "'" + finalRoute[i] + "'" + "]";
                     }
                     console.log(nRoute)
+                    storeMetadata(newRoute);
                     eval(nRoute + "[" + "'" + words[0].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("+routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
+                    deleteMetadata(routeToCompare);
                     eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
                     updateLocalStorage()
                     updateRutas()
                 }else{return new Error (`mv: No such file or directory`);}
             }else{return new Error (`mv: need to start with '/' and finish without '/': No such file or directory`);}
         }else if(checkWords(words[1].trim())){
+            let routeToCompare = inUseRoute.split("").slice(1).join("");
+            let newRoute = routeToCompare + "/" + words[1].trim() + "/" + words[0].trim();
+            routeToCompare += "/" + words[0].trim();
+            storeMetadata(newRoute);
             eval(routeObject + "[" + "'" + words[1].trim() + "'" + "]" + "[" + "'" + words[0].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("
             +routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
+            deleteMetadata(routeToCompare);
             eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
             updateLocalStorage()
             updateRutas()
         }else{
+            let routeToCompare = inUseRoute.split("").slice(1).join("");
+            let newRoute = routeToCompare + "/" + words[1].trim();
+            routeToCompare += "/" + words[0].trim();
+            storeMetadata(newRoute);
             eval(routeObject + "[" + "'" + words[1].trim() + "'" + "]" + "="+ "JSON.parse(JSON.stringify(eval("
             +routeObject + "[" + "'" + words[0].trim() + "'" + "]" +")))" )
+            deleteMetadata(routeToCompare);
             eval("delete "+routeObject + "[" + "'" + words[0].trim() + "'" + "]")
             updateLocalStorage()
             updateRutas()
@@ -366,5 +389,15 @@ function cmatrix(flag){
         document.querySelector('.display-terminal').classList.add("cmatrix")
         textarea.style.color= "white";
         clear()
+    }
+}
+
+// Delete metadada function
+
+function deleteMetadata(routeToCompare) {
+    for(let i = 0; i < metaData.length; i++) {
+        if(metaData[i].name === routeToCompare) {
+            metaData.splice(i, 1);
+        }
     }
 }
