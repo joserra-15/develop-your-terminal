@@ -359,8 +359,10 @@ function storeMetadata(flag){
 function cmatrix(flag){
     if(flag==="q"){
         document.querySelector('.display-terminal').classList.remove("cmatrix")
+        textarea.style.color= "lime";
     }else if(flag===""){
         document.querySelector('.display-terminal').classList.add("cmatrix")
+        textarea.style.color= "white";
         clear()
     }
 }
