@@ -185,8 +185,40 @@ function cat() {
 
 }
 
-function rm() {
-
+function rm(flag) {
+    let routeObject = "directoryObject";
+    route = inUseRoute.split("").slice(1).join("");
+    route = route.split("/");
+    for (let i = 0; i < route.length; i++) {
+        routeObject += "[" + "'" + route[i] + "'" + "]";
+    }
+    if(flag.includes('/')) {
+        if(flag[0] === "/" && flag[flag.length -1]!== "/") {
+            flag = flag.slice(1);
+            if(rutas.filter(e=>e===flag).length !==0){
+                routeObject = "directoryObject";
+                flag = flag.split("/");
+                for (let i = 0; i < flag.length; i++) {
+                    routeObject += "[" + "'" + flag[i] + "'" + "]";
+                }
+                eval("delete "+ routeObject);
+                updateRutas();
+            } else {return new Error (`rm: No such file or directory`);}
+        } else {return new Error (`rm: need to start with '/' and finish without '/': No such file or directory`);}
+    } else {
+        console.log(routeObject);
+        Object.keys(eval(routeObject)).forEach(e=>{
+            console.log(e);
+            console.log(flag);
+            if(e===flag){
+                console.log(routeObject + "[" + "'" + flag + "'" + "]");
+                eval("delete "+ routeObject + "[" + "'" + flag + "'" + "]");
+                updateRutas();
+                return;
+            }
+        })
+        return new Error (`rm: cannot start '${flag}': No such file or directory`);
+    }
 }
 
 function mv(flag) {
@@ -202,7 +234,7 @@ function mv(flag) {
             let finalRoute= words[1].trim()
             if(finalRoute[0]==="/" && finalRoute[finalRoute.length -1]!== "/" ){
                 finalRoute=finalRoute.slice(1)
-                if(rutas.filter(e=>e===finalRoute)!==0){
+                if(rutas.filter(e=>e===finalRoute).length!==0){
                     let nRoute = "directoryObject";
                     finalRoute = finalRoute.split("/");
                     for (let i = 0; i < finalRoute.length; i++) {
