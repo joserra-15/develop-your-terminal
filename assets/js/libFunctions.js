@@ -497,6 +497,14 @@ function cmatrix(flag){
         clear()
     }
 }
+//pinguland
+
+function ckirby(){
+    input.insertAdjacentHTML("beforebegin", `<pre>
+
+    <(-'.'-)>
+    </pre>`)
+}
 
 // Delete metadada function
 
