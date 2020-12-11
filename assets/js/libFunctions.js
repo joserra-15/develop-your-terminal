@@ -206,18 +206,20 @@ function rm(flag) {
             } else {return new Error (`rm: No such file or directory`);}
         } else {return new Error (`rm: need to start with '/' and finish without '/': No such file or directory`);}
     } else {
+        let value = false;
         console.log(routeObject);
         Object.keys(eval(routeObject)).forEach(e=>{
             console.log(e);
             console.log(flag);
             if(e===flag){
-                console.log(routeObject + "[" + "'" + flag + "'" + "]");
-                eval("delete "+ routeObject + "[" + "'" + flag + "'" + "]");
-                updateRutas();
-                return;
+                value = true;
             }
         })
-        return new Error (`rm: cannot start '${flag}': No such file or directory`);
+        if(value){
+            console.log(routeObject + "[" + "'" + flag + "'" + "]");
+            eval("delete "+ routeObject + "[" + "'" + flag + "'" + "]");
+            updateRutas();
+        } else {return new Error (`rm: cannot start '${flag}': No such file or directory`);}
     }
 }
 
