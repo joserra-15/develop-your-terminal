@@ -40,7 +40,6 @@ function ls(flag) {
     for (let i = 0; i < route.length; i++) {
         routeObject += "[" + "'" + route[i] + "'" + "]";
     }
-    console.log(routeObject);
     switch (flag) {
         case "-R":
             return "Estamos haciendo un ls -R"
@@ -56,8 +55,6 @@ function ls(flag) {
 
     function printFolders() {
         let folder = Object.keys(eval(routeObject));
-        console.log(Object.keys(eval(routeObject)));
-        console.log(folder);
         if (folder[0] === "0" || folder.length === 0) {
             return new Error('there are not folder/files abiable.');
         } else {
@@ -262,8 +259,37 @@ function echo(flag) {
 }
 
 
-function cat() {
+function cat(flag) {
+    let route = inUseRoute.split("").slice(1).join("");
+    let absoluteFlag = "";
 
+    if (flag.length > 0 && flag[0] === "/") {
+        absoluteFlag = flag;
+        absoluteFlag = absoluteFlag.split("").slice(1).join("");
+    }
+    if (flag.length > 0 && flag[0] === "/" && rutas.includes(absoluteFlag)) {
+        let routeObject = "directoryObject";
+        absoluteFlag = absoluteFlag.split('/');
+        for(let i=0; i < absoluteFlag.length; i++){
+            routeObject += "[" + "'" + absoluteFlag[i] + "'" + "]";
+        }
+        let p = document.createElement('p')
+        p.textContent = `${eval(routeObject)}`
+        input.insertAdjacentElement('beforebegin', p)
+
+    } else if (flag.length > 0 && rutas.includes(`${route}/${flag}`)) {
+        let routeObject = "directoryObject";
+        route = route.split('/');
+        for(let i=0; i<route.length; i++){
+            routeObject += "[" + "'" + route[i] + "'" + "]";
+        }
+        routeObject += "[" + "'" + flag + "'" + "]";
+        let p = document.createElement('p')
+        p.textContent = `${eval(routeObject)}`
+        input.insertAdjacentElement('beforebegin', p)
+    } else {
+        return new Error('file doesn\'t exist');
+    }
 }
 
 function rm(flag) {
