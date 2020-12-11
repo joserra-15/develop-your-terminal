@@ -178,8 +178,6 @@ function mkdir(flag) {
     }
 }
 
-
-
 function echo(flag) {
     let newFlag = flag.split(">")
 
@@ -234,16 +232,18 @@ function rm(flag) {
     }
     if(flag.includes('/')) {
         if(flag[0] === "/" && flag[flag.length -1]!== "/") {
-            flag = flag.slice(1);
-            if(rutas.filter(e=>e===flag).length !==0){
-                routeObject = "directoryObject";
-                flag = flag.split("/");
-                for (let i = 0; i < flag.length; i++) {
-                    routeObject += "[" + "'" + flag[i] + "'" + "]";
-                }
-                eval("delete "+ routeObject);
-                updateRutas();
-            } else {return new Error (`rm: No such file or directory`);}
+            if(flag!=="/raulrexulon"){
+                flag = flag.slice(1);
+                if(rutas.filter(e=>e===flag).length !==0){
+                    routeObject = "directoryObject";
+                    flag = flag.split("/");
+                    for (let i = 0; i < flag.length; i++) {
+                        routeObject += "[" + "'" + flag[i] + "'" + "]";
+                    }
+                    eval("delete "+ routeObject);
+                    updateRutas();
+                } else {return new Error (`rm: No such file or directory`);}
+            }else {return new Error (`rm: you can't remove root directory`);}
         } else {return new Error (`rm: need to start with '/' and finish without '/': No such file or directory`);}
     } else {
         let value = false;
@@ -336,7 +336,6 @@ function help() {
     rm`;
     input.insertAdjacentHTML("beforebegin", `<p>${help}</p>`)
 }
-
 
 // Function to store in local storage the dyrectorys adn to update it from local storage
 
