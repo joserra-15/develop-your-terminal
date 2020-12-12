@@ -4,6 +4,9 @@ let directoryObject = {"raulrexulon": {}};
 let metaData = [{"name": "raulrexulon", "time": 1607677301663, "size": 0}];
 let inUseRoute = `>raulrexulon`;
 let rutas;
+let newRootDirectory = false;
+let yesOrNoMkdirArgument;
+let yesOrNoRootchangeArgument;
 
 // Create class Metadata
 
@@ -73,9 +76,13 @@ function storeMetadata(name){
     let metaDataFile = new MetaDataObject(name, actualTime, 0);
     metaData.push(metaDataFile);
 }
+// TODO: necesitamos recursividad para comparar, hay que pensar en un filter porque al eliminar uno i deja de existir en ese array, verlo con los compañeros.
 function deleteMetadata(routeToCompare) {
     for(let i = 0; i < metaData.length; i++) {
-        if(metaData[i].name === routeToCompare) {
+        console.log(manolo);
+        manolo++
+        if(metaData[i].name.includes(routeToCompare)) {
+            console.log("eliminado")
             metaData.splice(i, 1);
         }
     }
@@ -105,6 +112,8 @@ function ls(arg) {
             return printFoldersT();
         case "":
             return printFolders();
+        case "-RTD":
+            return printRootDirectorys();
         default:
             return new Error('this command is not available.');
     }
@@ -122,13 +131,80 @@ function ls(arg) {
         }
     }
     function printFoldersR() {
-
+        let startRoute = inUseRoute.split("").slice(1).join("");
+        let routes = [];
+        for(let i = 0; i < rutas.length; i++) {
+            if(rutas[i].includes(startRoute)) {
+                routes.push(rutas[i]);
+            }
+        }
+        for(let i = 0; i < routes.length; i++) {
+            let partsOfTheRoute = routes[i]
+            partsOfTheRoute = partsOfTheRoute.split("/");
+            let routeToEval = "directoryObject";
+            if(partsOfTheRoute.length === 1) {
+                let route = partsOfTheRoute[0];
+                routeToEval += `['${route}']`;
+                let folder = Object.keys(eval(routeToEval));
+                if(folder[0] === "0" || folder.length === 0) {
+                    let routeToShow = "./";
+                    let cr = document.createElement("br");
+                    input.insertAdjacentElement('beforebegin', cr);
+                    let q = document.createElement('p');
+                    q.textContent = `${routeToShow}${route}`;
+                    input.insertAdjacentElement('beforebegin', q);
+                    let p = document.createElement('p');
+                    input.insertAdjacentElement('beforebegin', p);
+                    let br = document.createElement("br");
+                    input.insertAdjacentElement('beforebegin', br);
+                } else {
+                    let routeToShow = "./";
+                    let cr = document.createElement("br");
+                    input.insertAdjacentElement('beforebegin', cr);
+                    let q = document.createElement('p');
+                    q.textContent = `${routeToShow}${route}`;
+                    input.insertAdjacentElement('beforebegin', q);
+                    folder.forEach(e => {
+                    let p = document.createElement('p');
+                    p.textContent = e;
+                    input.insertAdjacentElement('beforebegin', p);
+                    })
+                    let br = document.createElement("br");
+                    input.insertAdjacentElement('beforebegin', br);
+                }
+            } else {
+                let routeToShow = "./";
+                for(let i = 0; i < partsOfTheRoute.length; i++) {
+                    routeToEval += `['${partsOfTheRoute[i]}']`;
+                    routeToShow += `${partsOfTheRoute[i]}/`;
+                }
+                let p = document.createElement('p');
+                p.textContent = routeToShow;
+                input.insertAdjacentElement('beforebegin', p);
+                let folder = Object.keys(eval(routeToEval));
+                folder.forEach(e => {
+                    let q = document.createElement('p');
+                    q.textContent = e;
+                    input.insertAdjacentElement('beforebegin', q);
+                })
+                let br = document.createElement("br");
+                input.insertAdjacentElement('beforebegin', br);
+            }
+        }
     }
     function printFoldersS() {
 
     }
     function printFoldersT() {
 
+    }
+    function printRootDirectorys() {
+        let rootDirectorys = Object.keys(directoryObject);
+        rootDirectorys.forEach(e => {
+            let p = document.createElement('p');
+            p.textContent = e;
+            input.insertAdjacentElement('beforebegin', p);
+        })
     }
 }
 function cd(arg) {
@@ -174,11 +250,12 @@ function cd(arg) {
     }
 
     function goDirectoryDefault() {
-        inUseRoute = `>raulrexulon`;
-        input.innerHTML = `>raulrexulon:`;
+        let route = inUseRoute.split("").slice(1).join("");
+        route = route.split("/");
+        inUseRoute = `>${route[0]}`;
+        input.innerHTML = `>${route[0]}:`;
     }
 }
-//TODO: Existe un todo dentro de esta funcion
 function mkdir(arg) {
     let route = inUseRoute.split("").slice(1).join("");
     let absoluteDirectory = "";
@@ -191,8 +268,15 @@ function mkdir(arg) {
     if(arg.length > 0 && arg[0] === "/" && rutas.includes(absoluteDirectory)) {
         return new Error('this directory/file allready exist.');
     } else if(arg.length > 0 && arg[0] === "/" && !rutas.includes(absoluteDirectory)) {
-        if(arg[1] !== "r") { //TODO: Comprobar que es raulrexulon entero no solo r y preguntar si se quiere crear un nuevo root.
-            return new Error('you can´t create a new root.');
+        yesOrNoArgument = arg;
+        let argument = arg.split("").slice(1).join("");
+        argument = argument.split('/');
+        if(argument[0] !== "raulrexulon") {
+            let p = document.createElement('p');
+            p.textContent = `Do you wan't to create a new Root Directory?`;
+            input.insertAdjacentElement('beforebegin', p);
+            newRootDirectory = true;
+            /* return new Error('you can´t create a new root.'); */
         } else {
             let otherRoute = arg.split('').slice(1).join('');
             otherRoute = otherRoute.split("/");
@@ -456,16 +540,20 @@ function help() {
     const help = `These shell commands are defined internally.  Type 'help' to see this list.
     cat
     cd
+    ckirby
     clear
+    cmatrix
     echo
     help
     ls
+    man
     mkdir
     mv
+    n
     pwd
+    rch
     rm
-    cmatrix
-    ckirby`;
+    y`;
     input.insertAdjacentHTML("beforebegin", `<pre>${help}</pre>`)
 }
 function man(arg) {
@@ -481,7 +569,8 @@ ls [OPTION]... [FILE]...
 Optional parameters:
 * ls -R: list subdirectories recursively.
 * ls -S: sort by file size, largest first.
-* ls -t: sort by time, newest first; see --time.</pre>`);
+* ls -t: sort by time, newest first; see --time.
+* ls -RTD: list of the existing root directory / Users.</pre>`);
             break;
         case "cd":
             input.insertAdjacentHTML("beforebegin",
@@ -540,6 +629,21 @@ cmatrix q</pre>`);
 protagonist of the Kirby series of video games owned by
 Nintendo and HAL Laboratory.</pre>`);
             break;
+        case "y":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>When a yes or no question shows in console you can use for an affirmative answer</pre>`);
+            break;
+        case "n":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>When a yes or no question shows in console you can use for an negative answer</pre>`);
+            break;
+        case "rch":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>cd [RootDirectory]
+Change the current root directory to RootDirectory.`);
+            break;
+        default:
+            return new Error('man: you need to add command name as argument.')
     }
 }
 function cmatrix(arg){
@@ -558,5 +662,61 @@ function ckirby(){
     <(-'.'-)>
     </pre>`)
 }
-//TODO: Preguntar a jose bien sobre el funcionamiento de remove.(carpeta final o todo el absolute path).
+function yes(){
+    if(newRootDirectory === true) {
+        let otherRoute = yesOrNoArgument.split('').slice(1).join('');
+        otherRoute = otherRoute.split("/");
+        let routeObject = "directoryObject";
+        let routeToCompare = "";
+        for (let i = 0; i < otherRoute.length; i++) {
+            let newRouteObject = routeObject;
+            if(i===0) {
+                routeToCompare += otherRoute[i];
+            } else {
+                routeToCompare += "/" + otherRoute[i];
+            }
+            newRouteObject += `['${otherRoute[i]}']`;
+            routeObject = newRouteObject;
+            newRouteObject += "={}";
+            if(rutas.includes(routeToCompare)) {
+                continue;
+            } else {
+                storeMetadata(routeToCompare);
+                eval(newRouteObject);
+            }
+        }
+        updateLocalStorage();
+        updateRutas();
+        newRootDirectory = false;
+    } else if(changeUser === true) {
+        let route = yesOrNoRootchangeArgument.split('').slice(1).join('');
+        if(route.length > 0 && rutas.includes(`${route}`)) {
+            inUseRoute = `>${route}`;
+            input.innerHTML = "";
+            input.innerHTML = `>${route}:`;
+        } else {
+            return new Error('cd: this root is not aviable');
+        }
+        changeUser = false;
+
+    }
+}
+function no() {
+    if(newRootDirectory === true) {
+        newRootDirectory = false;
+    } else if(changeUser === true) {
+        changeUser = false;
+    }
+}
+function rootChange(arg) {
+    if(arg[0] !== "/") {
+        return new Error('You need to enter absolute path to change to another root directory');
+    } else {
+        yesOrNoRootchangeArgument = arg;
+        let p = document.createElement('p');
+        p.textContent = `Are you sure you want to change the root directory/User?`;
+        input.insertAdjacentElement('beforebegin', p);
+        changeUser = true;
+    }
+}
 //TODO: Ver con jose la parte de rutas para comparar en vez del JSON.

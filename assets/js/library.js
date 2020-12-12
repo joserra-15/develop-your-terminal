@@ -31,29 +31,37 @@ function library(cmd, arg = '') {
     history(cmd, arg);
     switch(cmd) {
         case 'pwd':
-            return pwd()
+            return pwd();
         case 'ls':
-            return ls(arg)
+            return ls(arg);
         case 'cd':
-            return cd(arg)
+            return cd(arg);
         case 'mkdir':
-            return mkdir(arg)
+            return mkdir(arg);
         case 'echo':
-            return echo(arg)
+            return echo(arg);
         case 'cat':
-            return cat(arg)
+            return cat(arg);
         case 'rm':
-            return rm(arg)
+            return rm(arg);
         case 'mv':
-            return mv(arg)
+            return mv(arg);
         case 'clear':
-            return clear()
+            return clear();
         case 'help':
-            return help()
+            return help();
+        case 'man':
+            return man(arg);
         case 'cmatrix':
-            return cmatrix(arg)
+            return cmatrix(arg);
         case 'ckirby':
             return ckirby();
+        case 'y':
+            return yes();
+        case 'n':
+            return no();
+        case 'rch':
+            return rootChange(arg);
         default:
             return new Error('this command is not available.')
     }
