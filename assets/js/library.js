@@ -1,24 +1,8 @@
-// The terminal must be able to interpret the following Unix commands and offer the user a response according to the command used. 
-// Keep in mind that if the user enters an incorrect command, you should display an error message indicating that this command is not available.
-// pwd
-// ls
-// Optional parameters:
-// ls -R
-// ls -S
-// ls -t
-// cd
-// cd ..
-// mkdir
-// echo
-// Use this command to create files and the possibility of adding a text inside each of them
-// cat
-// Use this command to show the content of the created files
-// rm
-// mv
-// The user can both move files / directories or modify their name
-// clear
-// If the user executes the "clear" command, the previous records WON’T be deleted from localStorage, it only clears visually in Terminal.
+// Create constant to take the DOM element
+
 const input = document.querySelector('.display-terminal label');
+
+// Add event listner to the enter press and take the values of cmd and arguments
 
 window.addEventListener('keypress', (e) => {
     if (e.key == 'Enter') {
@@ -41,34 +25,43 @@ window.addEventListener('keypress', (e) => {
     }
 })
 
+// Add the principal function to work whith the bash
 
-function library(cmd, arg1 = '') {
-    history(cmd, arg1);
+function library(cmd, arg = '') {
+    history(cmd, arg);
     switch(cmd) {
         case 'pwd':
-            return pwd()
+            return pwd();
         case 'ls':
-            return ls(arg1)
+            return ls(arg);
         case 'cd':
-            return cd(arg1)
+            return cd(arg);
         case 'mkdir':
-            return mkdir(arg1)
+            return mkdir(arg);
         case 'echo':
-            return echo(arg1)  // echo "my name is yogi" > text.txt
+            return echo(arg);
         case 'cat':
-            return cat(arg1) // cat text.txt
+            return cat(arg);
         case 'rm':
-            return rm(arg1)
+            return rm(arg);
         case 'mv':
-            return mv(arg1) // mv text.txt /my/new/folder
+            return mv(arg);
         case 'clear':
-            return clear()
+            return clear();
         case 'help':
-            return help()
+            return help();
+        case 'man':
+            return man(arg);
         case 'cmatrix':
-            return cmatrix(arg1)
+            return cmatrix(arg);
         case 'ckirby':
             return ckirby();
+        case 'y':
+            return yes();
+        case 'n':
+            return no();
+        case 'rch':
+            return rootChange(arg);
         default:
             return new Error('this command is not available.')
     }
