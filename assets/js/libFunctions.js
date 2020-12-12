@@ -76,16 +76,20 @@ function storeMetadata(name){
     let metaDataFile = new MetaDataObject(name, actualTime, 0);
     metaData.push(metaDataFile);
 }
-// TODO: necesitamos recursividad para comparar, hay que pensar en un filter porque al eliminar uno i deja de existir en ese array, verlo con los compañeros.
 function deleteMetadata(routeToCompare) {
+    let metaDataToDelete = []
     for(let i = 0; i < metaData.length; i++) {
-        console.log(manolo);
-        manolo++
         if(metaData[i].name.includes(routeToCompare)) {
-            console.log("eliminado")
-            metaData.splice(i, 1);
+            metaDataToDelete.push(metaData[i].name);
         }
     }
+    metaDataToDelete.forEach(e => {
+        for(let i = 0; i < metaData.length; i++) {
+            if(e === metaData[i].name) {
+                metaData.splice(i, 1);
+            }
+        }
+    })
 }
 
 // Define the function for each command
@@ -98,14 +102,24 @@ function ls(arg) {
     let routeObject = "directoryObject";
     let route = inUseRoute.split("").slice(1).join("");
     route = route.split("/");
+    let startDirectory = arg.split(" ");
+    let argument;
+    let relativeRoute;
+    if(startDirectory.length === 1) {
+        argument = startDirectory[0];
+        relativeRoute = "";
+    } else {
+        argument = startDirectory[0];
+        relativeRoute = startDirectory[1];
+    }
 
     route.forEach(e => {
         routeObject += `['${e}']`;
     })
 
-    switch (arg) {
+    switch (argument) {
         case "-R":
-            return printFoldersR();
+            return printFoldersR(relativeRoute);
         case "-S":
             return printFoldersS();
         case "-t":
@@ -130,65 +144,89 @@ function ls(arg) {
             })
         }
     }
-    function printFoldersR() {
+    function printFoldersR(arg) {
         let startRoute = inUseRoute.split("").slice(1).join("");
         let routes = [];
-        for(let i = 0; i < rutas.length; i++) {
-            if(rutas[i].includes(startRoute)) {
-                routes.push(rutas[i]);
+        let absoluteDirectory;
+        if(arg.length === 0) {
+            for(let i = 0; i < rutas.length; i++) {
+                if(rutas[i].includes(startRoute)) {
+                    routes.push(rutas[i]);
+                }
+            }
+            printR();
+        } else if(arg.length > 0) {
+            if(arg[0] === "/") {
+                absoluteDirectory = arg;
+                absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
+                for(let i = 0; i < rutas.length; i++) {
+                    if(rutas[i].includes(absoluteDirectory)) {
+                        routes.push(rutas[i]);
+                    }
+                }
+                printR();
+            } else {
+                for(let i = 0; i < rutas.length; i++) {
+                    if(rutas[i].includes(startRoute)) {
+                        routes.push(rutas[i]);
+                    }
+                }
+                printR();
             }
         }
-        for(let i = 0; i < routes.length; i++) {
-            let partsOfTheRoute = routes[i]
-            partsOfTheRoute = partsOfTheRoute.split("/");
-            let routeToEval = "directoryObject";
-            if(partsOfTheRoute.length === 1) {
-                let route = partsOfTheRoute[0];
-                routeToEval += `['${route}']`;
-                let folder = Object.keys(eval(routeToEval));
-                if(folder[0] === "0" || folder.length === 0) {
-                    let routeToShow = "./";
-                    let cr = document.createElement("br");
-                    input.insertAdjacentElement('beforebegin', cr);
-                    let q = document.createElement('p');
-                    q.textContent = `${routeToShow}${route}`;
-                    input.insertAdjacentElement('beforebegin', q);
-                    let p = document.createElement('p');
-                    input.insertAdjacentElement('beforebegin', p);
-                    let br = document.createElement("br");
-                    input.insertAdjacentElement('beforebegin', br);
+        function printR() {
+            for(let i = 0; i < routes.length; i++) {
+                let partsOfTheRoute = routes[i]
+                partsOfTheRoute = partsOfTheRoute.split("/");
+                let routeToEval = "directoryObject";
+                if(partsOfTheRoute.length === 1) {
+                    let route = partsOfTheRoute[0];
+                    routeToEval += `['${route}']`;
+                    let folder = Object.keys(eval(routeToEval));
+                    if(folder[0] === "0" || folder.length === 0) {
+                        let routeToShow = "./";
+                        let cr = document.createElement("br");
+                        input.insertAdjacentElement('beforebegin', cr);
+                        let q = document.createElement('p');
+                        q.textContent = `${routeToShow}${route}`;
+                        input.insertAdjacentElement('beforebegin', q);
+                        let p = document.createElement('p');
+                        input.insertAdjacentElement('beforebegin', p);
+                        let br = document.createElement("br");
+                        input.insertAdjacentElement('beforebegin', br);
+                    } else {
+                        let routeToShow = "./";
+                        let cr = document.createElement("br");
+                        input.insertAdjacentElement('beforebegin', cr);
+                        let q = document.createElement('p');
+                        q.textContent = `${routeToShow}${route}`;
+                        input.insertAdjacentElement('beforebegin', q);
+                        folder.forEach(e => {
+                        let p = document.createElement('p');
+                        p.textContent = e;
+                        input.insertAdjacentElement('beforebegin', p);
+                        })
+                        let br = document.createElement("br");
+                        input.insertAdjacentElement('beforebegin', br);
+                    }
                 } else {
                     let routeToShow = "./";
-                    let cr = document.createElement("br");
-                    input.insertAdjacentElement('beforebegin', cr);
-                    let q = document.createElement('p');
-                    q.textContent = `${routeToShow}${route}`;
-                    input.insertAdjacentElement('beforebegin', q);
-                    folder.forEach(e => {
+                    for(let i = 0; i < partsOfTheRoute.length; i++) {
+                        routeToEval += `['${partsOfTheRoute[i]}']`;
+                        routeToShow += `${partsOfTheRoute[i]}/`;
+                    }
                     let p = document.createElement('p');
-                    p.textContent = e;
+                    p.textContent = routeToShow;
                     input.insertAdjacentElement('beforebegin', p);
+                    let folder = Object.keys(eval(routeToEval));
+                    folder.forEach(e => {
+                        let q = document.createElement('p');
+                        q.textContent = e;
+                        input.insertAdjacentElement('beforebegin', q);
                     })
                     let br = document.createElement("br");
                     input.insertAdjacentElement('beforebegin', br);
                 }
-            } else {
-                let routeToShow = "./";
-                for(let i = 0; i < partsOfTheRoute.length; i++) {
-                    routeToEval += `['${partsOfTheRoute[i]}']`;
-                    routeToShow += `${partsOfTheRoute[i]}/`;
-                }
-                let p = document.createElement('p');
-                p.textContent = routeToShow;
-                input.insertAdjacentElement('beforebegin', p);
-                let folder = Object.keys(eval(routeToEval));
-                folder.forEach(e => {
-                    let q = document.createElement('p');
-                    q.textContent = e;
-                    input.insertAdjacentElement('beforebegin', q);
-                })
-                let br = document.createElement("br");
-                input.insertAdjacentElement('beforebegin', br);
             }
         }
     }
