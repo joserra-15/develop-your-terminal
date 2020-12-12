@@ -146,7 +146,6 @@ function ls(arg) {
     function printFolders(arg) {
         let absoluteDirectory;
         let relativeDirectory;
-        console.log(arg);
         if(arg === "") {
             let routeObject = "directoryObject";
             let routeToWork = inUseRoute.split("").slice(1).join("");
@@ -212,7 +211,7 @@ function ls(arg) {
         function print(route) {
             folder = Object.keys(eval(route));
             if(folder[0] === "0" || folder.length === 0) {
-                return new Error('this command is not available.');
+                return new Error('there are not folders available.');
             } else {
                 folder.forEach(e => {
                     let p = document.createElement('p');
@@ -334,8 +333,135 @@ function ls(arg) {
     function printFoldersS() {
 
     }
-    function printFoldersT() {
-
+    function printFoldersT(arg) {
+        if(arg.length > 0) {
+            if(arg[0] === "/"){
+                let route = arg.split("").slice(1).join("");
+                if(rutas.includes(route)) {
+                    let routeObject = "directoryObject";
+                    let routeToCompareMetadata = "";
+                    route = route.split("/");
+                    for(let i = 0; i < route.length; i++) {
+                        if(i === 0) {
+                            routeToCompareMetadata += route[i];
+                        } else {
+                            routeToCompareMetadata += `/${route[i]}`;
+                        }
+                        routeObject += `['${route[i]}']`;
+                    }
+                    return printDirectorysTimeOrdered(routeObject, routeToCompareMetadata);
+                } else {
+                    return new Error('the path does not exist.')
+                }
+            } else if(arg[0] === "." && arg[1] === "/") {
+                let actualRoute = inUseRoute.split("").slice(1).join("");
+                let route = arg.split("").slice(1).join("");
+                route = route.split("").slice(1).join("");
+                actualRoute += `/${route}`;
+                if(rutas.includes(actualRoute)) {
+                    let routeObject = "directoryObject";
+                    let routeToCompareMetadata = "";
+                    route = actualRoute.split("/");
+                    for(let i = 0; i < route.length; i++) {
+                        if(i === 0) {
+                            routeToCompareMetadata += route[i];
+                        } else {
+                            routeToCompareMetadata += `/${route[i]}`;
+                        }
+                        routeObject += `['${route[i]}']`;
+                    }
+                    return printDirectorysTimeOrdered(routeObject, routeToCompareMetadata);
+                } else {
+                    return new Error('the path does not exist.')
+                }
+            } else if(arg.includes("/")) {
+                let actualRoute = inUseRoute.split("").slice(1).join("");
+                let route = arg
+                actualRoute += `/${route}`;
+                if(rutas.includes(actualRoute)) {
+                    let routeObject = "directoryObject";
+                    let routeToCompareMetadata = "";
+                    route = actualRoute.split("/");
+                    for(let i = 0; i < route.length; i++) {
+                        if(i === 0) {
+                            routeToCompareMetadata += route[i];
+                        } else {
+                            routeToCompareMetadata += `/${route[i]}`;
+                        }
+                        routeObject += `['${route[i]}']`;
+                    }
+                    return printDirectorysTimeOrdered(routeObject, routeToCompareMetadata);
+                } else {
+                    return new Error('the path does not exist.')
+                }
+            } else {
+                let actualRoute = inUseRoute.split("").slice(1).join("");
+                let route = arg
+                actualRoute += `/${route}`;
+                if(rutas.includes(actualRoute)) {
+                    let routeObject = "directoryObject";
+                    let routeToCompareMetadata = "";
+                    route = actualRoute.split("/");
+                    for(let i = 0; i < route.length; i++) {
+                        if(i === 0) {
+                            routeToCompareMetadata += route[i];
+                        } else {
+                            routeToCompareMetadata += `/${route[i]}`;
+                        }
+                        routeObject += `['${route[i]}']`;
+                    }
+                    return printDirectorysTimeOrdered(routeObject, routeToCompareMetadata);
+                } else {
+                    return new Error('the path does not exist.')
+                }
+            }
+        } else {
+            let route = inUseRoute.split("").slice(1).join("");
+            let routeObject = "directoryObject";
+            let routeToCompareMetadata = "";
+            route = route.split("/");
+            for(let i = 0; i < route.length; i++) {
+                if(i === 0) {
+                    routeToCompareMetadata += route[i];
+                } else {
+                    routeToCompareMetadata += `/${route[i]}`;
+                }
+                routeObject += `['${route[i]}']`;
+            }
+            return printDirectorysTimeOrdered(routeObject, routeToCompareMetadata);
+        }
+        function printDirectorysTimeOrdered(arg, route) {
+            let folders = Object.keys(eval(arg));
+            if(folders[0] === "0" || folders.length === 0) {
+                return new Error('there are not folders available.');
+            } else {
+                let timeArray = [];
+                let finalArray = [];
+                folders.forEach(e => {
+                    let finalRoute = route + `/${e}`;
+                    metaData.forEach(e => {
+                        if(e.name === finalRoute) {
+                            timeArray.push(e.time);
+                        }
+                    })
+                })
+                let arrayForFinalArray = [];
+                for(let i = 0; i < folders.length; i ++) {
+                    arrayForFinalArray.push(folders[i]);
+                    arrayForFinalArray.push(timeArray[i]);
+                    finalArray.push(arrayForFinalArray);
+                    arrayForFinalArray = [];
+                }
+                finalArray.sort(function (a, b) {
+                    return b[1] - a[1];
+                })
+                finalArray.forEach(e => {
+                    let p = document.createElement('p');
+                        p.textContent = e[0];
+                        input.insertAdjacentElement('beforebegin', p);
+                })
+            }
+        }
     }
     function printRootDirectorys() {
         let rootDirectorys = Object.keys(directoryObject);
