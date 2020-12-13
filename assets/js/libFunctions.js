@@ -935,11 +935,19 @@ function mv(arg) {
     if(checkWords(words[0].trim())){
         if(words[1].trim().includes("/")){
             let finalRoute= words[1].trim()
+            let nRoute = "directoryObject";
+            let routeToCompare = inUseRoute.split("").slice(1).join("");
+            if(finalRoute[0]==="." && finalRoute[1]==="/" ){
+                finalRoute=finalRoute.slice(1)
+                finalRoute= `/${routeToCompare}${finalRoute}`
+                console.log(finalRoute)
+            }else if(finalRoute[0]!== "/"){
+                finalRoute= `/${routeToCompare}/${finalRoute}`
+                console.log(finalRoute)
+            }
             if(finalRoute[0]==="/" && finalRoute[finalRoute.length -1]!== "/" ){
                 finalRoute=finalRoute.slice(1)
                 if(rutas.filter(e=>e===finalRoute)!==0){
-                    let nRoute = "directoryObject";
-                    let routeToCompare = inUseRoute.split("").slice(1).join("");
                     let newRoute = finalRoute + "/" + words[0].trim();
                     routeToCompare += "/" + words[0].trim();
                     finalRoute = finalRoute.split("/");
