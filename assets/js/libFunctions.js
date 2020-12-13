@@ -888,12 +888,29 @@ function rm(arg) {
         routeObject += `['${route[i]}']`;
     }
     if(arg.includes('/')) {
+        let routeToCompare = inUseRoute.split("").slice(1).join("");
+        if(arg[0]==="." && arg[1]==="/" ){
+            arg=arg.slice(1)
+            arg= `/${routeToCompare}${arg}`
+            console.log(arg)
+        }else if(arg[0]!== "/"){
+            arg= `/${routeToCompare}/${arg}`
+            console.log(arg)
+        }
         if(arg[0] === "/" && arg[arg.length -1]!== "/") {
-            if(arg!=="/raulrexulon"){
-                arg = arg.slice(1);
+            arg = arg.slice(1);
+            let notRoot=true
+            rutas.forEach(e=>{
+                console.log(e)
+                console.log(!(e.includes("/")) && e===arg)
+                if(!(e.includes("/")) && e===arg){
+                notRoot=false;
+                }
+            })
+            if(notRoot){
                 if(rutas.filter(e=>e===arg).length !==0){
                     routeObject = "directoryObject";
-                    let routeToCompare = arg;
+                    routeToCompare = arg;
                     arg = arg.split("/");
                     for (let i = 0; i < arg.length; i++) {
                         routeObject += `['${arg[i]}']`;
