@@ -698,35 +698,75 @@ function cd(arg) {
     changeUser = false;
     if(arg.includes(".")) {
         let argumentToFile = arg.split("").slice(1).join("");
+        argumentToFile = argumentToFile.split("").slice(1).join("");
         if(argumentToFile.includes(".")) {
             return new Error("cd: you can not do cd into a file");
         } else {
-            let startDirectory = arg.split(" ");
-            let relativeRoute;
-            if(startDirectory[0] === "") {
-                argument = "";
-            } else {
-                if(startDirectory[0] === "..") {
-                    argument = startDirectory[0];
-                    relativeRoute = "";
+            if(arg[0] === "." && arg[1] === "/") {
+                let startDirectory = arg.split(" ");
+                let relativeRoute;
+                if(startDirectory[0] === "") {
+                    argument = "";
                 } else {
-                    argument = " ";
-                    relativeRoute = startDirectory[0];
+                    if(startDirectory[0] === "..") {
+                        argument = startDirectory[0];
+                        relativeRoute = "";
+                    } else {
+                        argument = " ";
+                        relativeRoute = startDirectory[0];
+                    }
                 }
-            }
-            let finalRoute = relativeRoute.split("").slice(1).join("");
-            finalRoute = finalRoute.split("").slice(1).join("");
-            let routeToCompare = inUseRoute.split("").slice(1).join("");
-            if(finalRoute === "") {
-                routeToCompare += `${finalRoute}`
-            } else {
-                routeToCompare += `/${finalRoute}`
-            }
-            if(rutas.includes(routeToCompare)) {
-                input.innerHTML = `>${routeToCompare}:`;
-                inUseRoute = `>${routeToCompare}`;
-            } else {
-                return new Error('cd: the path does not exist.');
+                let finalRoute = relativeRoute.split("").slice(1).join("");
+                finalRoute = finalRoute.split("").slice(1).join("");
+                let routeToCompare = inUseRoute.split("").slice(1).join("");
+                if(finalRoute === "") {
+                    routeToCompare += `${finalRoute}`
+                } else {
+                    routeToCompare += `/${finalRoute}`
+                }
+                if(rutas.includes(routeToCompare)) {
+                    input.innerHTML = `>${routeToCompare}:`;
+                    inUseRoute = `>${routeToCompare}`;
+                } else {
+                    return new Error('cd: the path does not exist.');
+                }
+            } else if(arg[0] === "." && arg[1] === ".") {
+                let route = inUseRoute.split("").slice(1).join("");
+                let startDirectory = arg.split(" ");
+                let argument;
+                let relativeRoute;
+                if(startDirectory[0] === "") {
+                    argument = "";
+                } else {
+                    if(startDirectory[0] === "..") {
+                        argument = startDirectory[0];
+                        relativeRoute = "";
+                    } else {
+                        argument = " ";
+                        relativeRoute = startDirectory[0];
+                    }
+                }
+                if(argument === "..") {
+                    if(input.textContent === inUseRoot + ":") {
+                        return new Error('cd: you are in the root directory.');
+                    } else {
+                        let route = inUseRoute.split("/");
+                        route.pop();
+                        route.join("/");
+                        input.innerHTML = "";
+                        inUseRoute = "";
+                        route.forEach(e => {
+                            if(e === route[route.length - 1]) {
+                                input.innerHTML += `${e}`;
+                                inUseRoute += `${e}`;
+                                input.innerHTML += ":";
+                            } else {
+                                input.innerHTML += `${e}/`;
+                                inUseRoute += `${e}/`;
+                            }
+                        })
+                    }
+                }
             }
         }
     } else {
