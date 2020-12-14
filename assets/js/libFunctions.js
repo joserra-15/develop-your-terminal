@@ -1155,7 +1155,7 @@ function rm(arg) {
     newRootDirectory = false;
     changeUser = false;
     let routeObject = "directoryObject";
-    route = inUseRoute.split("").slice(1).join("");
+    let route = inUseRoute.split("").slice(1).join("");
     route = route.split("/");
     for (let i = 0; i < route.length; i++) {
         routeObject += `['${route[i]}']`;
@@ -1212,7 +1212,7 @@ function mv(arg) {
     newRootDirectory = false;
     changeUser = false;
     let routeObject = "directoryObject";
-    route = inUseRoute.split("").slice(1).join("");
+    let route = inUseRoute.split("").slice(1).join("");
     route = route.split("/");
     for (let i = 0; i < route.length; i++) {
         routeObject += `['${route[i]}']`;
