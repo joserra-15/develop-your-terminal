@@ -901,6 +901,9 @@ function echo(arg) {
     }
 }
 function cat(arg) {
+    if (!(arg.endsWith('.txt') || arg.endsWith('.js')) ){
+        return new Error('Invalid file type')
+    }
     newRootDirectory = false;
     changeUser = false;
     let route = inUseRoute.split("").slice(1).join("");
