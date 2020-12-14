@@ -127,21 +127,42 @@ function ls(arg) {
             relativeRoute = startDirectory[1];
         }
     }
-    switch (argument) {
-        case "-R":
-            return printFoldersR(relativeRoute);
-        case "-S":
-            return printFoldersS(relativeRoute);
-        case "-t":
-            return printFoldersT(relativeRoute);
-        case "":
-            return printFolders(relativeRoute);
-        case "-RTD":
-            return printRootDirectorys();
-        default:
-            return new Error('this command is not available.');
+    if(relativeRoute.includes(".")) {
+        let argumentToFile = relativeRoute.split("").slice(1).join("");
+        if(argumentToFile.includes(".")) {
+            return new Error("ls: you can not do ls into a file");
+        } else {
+            switch (argument) {
+                case "-R":
+                    return printFoldersR(relativeRoute);
+                case "-S":
+                    return printFoldersS(relativeRoute);
+                case "-t":
+                    return printFoldersT(relativeRoute);
+                case "":
+                    return printFolders(relativeRoute);
+                case "-RTD":
+                    return printRootDirectorys();
+                default:
+                    return new Error('this command is not available.');
+            }
+        }
+    } else {
+        switch (argument) {
+            case "-R":
+                return printFoldersR(relativeRoute);
+            case "-S":
+                return printFoldersS(relativeRoute);
+            case "-t":
+                return printFoldersT(relativeRoute);
+            case "":
+                return printFolders(relativeRoute);
+            case "-RTD":
+                return printRootDirectorys();
+            default:
+                return new Error('this command is not available.');
+        }
     }
-
     function printFolders(arg) {
         let absoluteDirectory;
         let relativeDirectory;
@@ -168,9 +189,22 @@ function ls(arg) {
                 absoluteDirectory = arg.split("").slice(1).join("");
                 absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
                 let routeToCompare = inUseRoute.split("").slice(1).join("");
-                let compareRoute = `${routeToCompare}/${absoluteDirectory}`
+                let compareRoute;
+                if(absoluteDirectory === ""){
+                    compareRoute = `${routeToCompare}`
+                } else {
+                    compareRoute = `${routeToCompare}/${absoluteDirectory}`
+                }
                 if (rutas.includes(compareRoute)) {
-                    absoluteDirectory = absoluteDirectory.split("/");
+                    if(absoluteDirectory === "") {
+                        routeToCompare = compareRoute.split("/");
+                        let routeObject = "directoryObject";
+                        routeToCompare.forEach(e => {
+                            routeObject += `['${e}']`;
+                        })
+                        return print(routeObject);
+                    } else {
+                        absoluteDirectory = absoluteDirectory.split("/");
                     routeToCompare = routeToCompare.split("/");
                     let routeObject = "directoryObject";
                     routeToCompare.forEach(e => {
@@ -180,6 +214,7 @@ function ls(arg) {
                         routeObject += `['${e}']`;
                     })
                     return print(routeObject);
+                    }
                 } else {
                     return new Error('the path does not exist.');
                 }
@@ -197,7 +232,8 @@ function ls(arg) {
                 })
                 return print(actualPath);
             } else {
-                relativeDirectory = arg;
+                relativeDirectory = inUseRoute.split("").slice(1).join("");
+                relativeDirectory += `/${arg}`;
                 let routeObject = "directoryObject";
                 let routeToWork = relativeDirectory.split("/");
                 routeToWork.forEach(e => {
@@ -243,8 +279,12 @@ function ls(arg) {
             } else if(arg[0] === "." && arg[1] === "/") {
                 absoluteDirectory = startRoute;
                 let arfument = arg.split("").slice(1).join("");
-                arfument = arg.split("").slice(1).join("");
-                absoluteDirectory += `${arfument}`;
+                let arfument1 = arfument.split("").slice(1).join("");
+                if(arfument1 === "") {
+                    absoluteDirectory += `${arfument1}`;
+                } else {
+                    absoluteDirectory += `${arfument}`;
+                }
                 for(let i = 0; i < rutas.length; i++) {
                     if(rutas[i].includes(absoluteDirectory)) {
                         routes.push(rutas[i]);
@@ -350,7 +390,11 @@ function ls(arg) {
                 let actualRoute = inUseRoute.split("").slice(1).join("");
                 let route = arg.split("").slice(1).join("");
                 route = route.split("").slice(1).join("");
-                actualRoute += `/${route}`;
+                if(route === "") {
+                    actualRoute += `${route}`;
+                } else {
+                    actualRoute += `/${route}`;
+                }
                 if(rutas.includes(actualRoute)) {
                     let routeObject = "directoryObject";
                     let routeToCompareMetadata = "";
@@ -530,7 +574,11 @@ function ls(arg) {
                 let actualRoute = inUseRoute.split("").slice(1).join("");
                 let route = arg.split("").slice(1).join("");
                 route = route.split("").slice(1).join("");
-                actualRoute += `/${route}`;
+                if(route === "") {
+                    actualRoute += `${route}`;
+                } else {
+                    actualRoute += `/${route}`;
+                }
                 if(rutas.includes(actualRoute)) {
                     let routeObject = "directoryObject";
                     let routeToCompareMetadata = "";
@@ -648,87 +696,121 @@ function ls(arg) {
 function cd(arg) {
     newRootDirectory = false;
     changeUser = false;
-    let route = inUseRoute.split("").slice(1).join("");
-    let startDirectory = arg.split(" ");
-    let argument;
-    let relativeRoute;
-    if(startDirectory[0] === "") {
-        argument = "";
-    } else {
-        if(startDirectory[0] === "..") {
-            argument = startDirectory[0];
-            relativeRoute = "";
+    if(arg.includes(".")) {
+        let argumentToFile = arg.split("").slice(1).join("");
+        if(argumentToFile.includes(".")) {
+            return new Error("cd: you can not do cd into a file");
         } else {
-            argument = " ";
-            relativeRoute = startDirectory[0];
-        }
-    }
-    if(argument === ""){
-        goDirectoryDefault();
-    } else if(argument === "..") {
-        if(input.textContent === inUseRoot + ":") {
-            return new Error('cd: you are in the root directory.');
-        } else {
-            let route = inUseRoute.split("/");
-            route.pop();
-            route.join("/");
-            input.innerHTML = "";
-            inUseRoute = "";
-            route.forEach(e => {
-                if(e === route[route.length - 1]) {
-                    input.innerHTML += `${e}`;
-                    inUseRoute += `${e}`;
-                    input.innerHTML += ":";
-                } else {
-                    input.innerHTML += `${e}/`;
-                    inUseRoute += `${e}/`;
-                }
-            })
-        }
-    } else {
-        if(startDirectory[0][0] === "/") {
-            absoluteDirectory = arg.split("").slice(1).join("");
-            if(rutas.includes(absoluteDirectory)) {
-                inUseRoute = `>${absoluteDirectory}`;
-                input.innerHTML = `>${absoluteDirectory}:`;
+            let startDirectory = arg.split(" ");
+            let relativeRoute;
+            if(startDirectory[0] === "") {
+                argument = "";
             } else {
-                return new Error('cd: the path does not exist.');
-            }
-        } else if(startDirectory[0].includes("/")) {
-            if(startDirectory[0][0] === "." && startDirectory[0][1] === "/") {
-                let finalRoute = relativeRoute.split("").slice(1).join("");
-                finalRoute = finalRoute.split("").slice(1).join("");
-                finalRoute = finalRoute.split("").slice(1).join("");
-                let routeToCompare = inUseRoute.split("").slice(1).join("");
-                routeToCompare += `/${finalRoute}`
-                if(rutas.includes(routeToCompare)) {
-                    input.innerHTML = `>${routeToCompare}:`;
-                    inUseRoute = `>${routeToCompare}`;
+                if(startDirectory[0] === "..") {
+                    argument = startDirectory[0];
+                    relativeRoute = "";
                 } else {
-                    return new Error('cd: the path does not exist.');
-                }
-            } else {
-                let finalRoute = relativeRoute
-                let routeToCompare = inUseRoute.split("").slice(1).join("");
-                routeToCompare += `/${finalRoute}`
-                if(rutas.includes(routeToCompare)) {
-                    input.innerHTML = `>${routeToCompare}:`;
-                    inUseRoute = `>${routeToCompare}`;
-                } else {
-                    return new Error('cd: the path does not exist.');
+                    argument = " ";
+                    relativeRoute = startDirectory[0];
                 }
             }
-        } else {
-            if(rutas.includes(`${route}/${relativeRoute}`)) {
-                let route = input.textContent.split(":");
-                input.innerHTML = route[0] + `/` + relativeRoute + ":";
-                inUseRoute = route[0] + `/` + relativeRoute;
+            let finalRoute = relativeRoute.split("").slice(1).join("");
+            finalRoute = finalRoute.split("").slice(1).join("");
+            let routeToCompare = inUseRoute.split("").slice(1).join("");
+            if(finalRoute === "") {
+                routeToCompare += `${finalRoute}`
+            } else {
+                routeToCompare += `/${finalRoute}`
+            }
+            if(rutas.includes(routeToCompare)) {
+                input.innerHTML = `>${routeToCompare}:`;
+                inUseRoute = `>${routeToCompare}`;
             } else {
                 return new Error('cd: the path does not exist.');
             }
         }
+    } else {
+        let route = inUseRoute.split("").slice(1).join("");
+        let startDirectory = arg.split(" ");
+        let argument;
+        let relativeRoute;
+        if(startDirectory[0] === "") {
+            argument = "";
+        } else {
+            if(startDirectory[0] === "..") {
+                argument = startDirectory[0];
+                relativeRoute = "";
+            } else {
+                argument = " ";
+                relativeRoute = startDirectory[0];
+            }
+        }
+        if(argument === ""){
+            goDirectoryDefault();
+        } else if(argument === "..") {
+            if(input.textContent === inUseRoot + ":") {
+                return new Error('cd: you are in the root directory.');
+            } else {
+                let route = inUseRoute.split("/");
+                route.pop();
+                route.join("/");
+                input.innerHTML = "";
+                inUseRoute = "";
+                route.forEach(e => {
+                    if(e === route[route.length - 1]) {
+                        input.innerHTML += `${e}`;
+                        inUseRoute += `${e}`;
+                        input.innerHTML += ":";
+                    } else {
+                        input.innerHTML += `${e}/`;
+                        inUseRoute += `${e}/`;
+                    }
+                })
+            }
+        } else {
+            if(startDirectory[0][0] === "/") {
+                absoluteDirectory = arg.split("").slice(1).join("");
+                if(rutas.includes(absoluteDirectory)) {
+                    inUseRoute = `>${absoluteDirectory}`;
+                    input.innerHTML = `>${absoluteDirectory}:`;
+                } else {
+                    return new Error('cd: the path does not exist.');
+                }
+            } else if(startDirectory[0].includes("/")) {
+                if(startDirectory[0][0] === "." && startDirectory[0][1] === "/") {
+                    let finalRoute = relativeRoute.split("").slice(1).join("");
+                    finalRoute = finalRoute.split("").slice(1).join("");
+                    finalRoute = finalRoute.split("").slice(1).join("");
+                    let routeToCompare = inUseRoute.split("").slice(1).join("");
+                    routeToCompare += `/${finalRoute}`
+                    if(rutas.includes(routeToCompare)) {
+                        input.innerHTML = `>${routeToCompare}:`;
+                        inUseRoute = `>${routeToCompare}`;
+                    } else {
+                        return new Error('cd: the path does not exist.');
+                    }
+                } else {
+                    let finalRoute = relativeRoute
+                    let routeToCompare = inUseRoute.split("").slice(1).join("");
+                    routeToCompare += `/${finalRoute}`
+                    if(rutas.includes(routeToCompare)) {
+                        input.innerHTML = `>${routeToCompare}:`;
+                        inUseRoute = `>${routeToCompare}`;
+                    } else {
+                        return new Error('cd: the path does not exist.');
+                    }
+                }
+            } else {
+                if(rutas.includes(`${route}/${relativeRoute}`)) {
+                    let route = input.textContent.split(":");
+                    input.innerHTML = route[0] + `/` + relativeRoute + ":";
+                    inUseRoute = route[0] + `/` + relativeRoute;
+                } else {
+                    return new Error('cd: the path does not exist.');
+                }
+            }
+        }
     }
-
     function goDirectoryDefault() {
         let route = inUseRoute.split("").slice(1).join("");
         route = route.split("/");
@@ -742,103 +824,18 @@ function mkdir(arg) {
     let route = inUseRoute.split("").slice(1).join("");
     let absoluteDirectory = "";
     let argument;
-    if (arg !== ""){
-        if(arg[0] === "." && arg[1] === "/"){
+    if(arg.includes(".")){
+        let argumentToFile = arg.split("").slice(1).join("");
+        if(argumentToFile.includes(".")) {
+            return new Error("mkdir: you can not create files whith mkdir");
+        } else {
             absoluteDirectory = arg.split("").slice(1).join("");
             absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
-            route += `/${absoluteDirectory}`;
-            if(rutas.includes(route)) {
-                return new Error('this directory/file allready exist.');
+            if(absoluteDirectory === "") {
+                route += `${absoluteDirectory}`;
             } else {
-                argument = route.split('/');
-                let routeObject = "directoryObject";
-                let routeToEval;
-                let routeToMetadata = "";
-                for(let i = 0; i < argument.length; i++) {
-                    if(i === 0) {
-                        routeToMetadata += argument[i];
-                    } else {
-                        routeToMetadata += "/" + argument[i];
-                    }
-                    routeObject += `['${argument[i]}']`;
-                    routeToEval = routeObject;
-                    routeToEval += "={}";
-                    if(rutas.includes(routeToMetadata)) {
-                        continue;
-                    } else {
-                        storeMetadata(routeToMetadata);
-                        eval(routeToEval);
-                        updateLocalStorage();
-                        updateRutas();
-                    }
-                }
+                route += `/${absoluteDirectory}`;
             }
-        } else if (arg[0] === "/") {
-            yesOrNoArgument = arg;
-            let argument = arg.split("").slice(1).join("");
-            argument = argument.split('/');
-            if(argument[0] !== "raulrexulon") {
-                let p = document.createElement('p');
-                p.textContent = `Do you wan't to create a new Root Directory?`;
-                input.insertAdjacentElement('beforebegin', p);
-                newRootDirectory = true;
-            } else {
-                let otherRoute = arg.split('').slice(1).join('');
-                otherRoute = otherRoute.split("/");
-                let routeObject = "directoryObject";
-                let routeToCompare = "";
-                for (let i = 0; i < otherRoute.length; i++) {
-                    let newRouteObject = routeObject;
-                    if(i===0) {
-                        routeToCompare += otherRoute[i];
-                    } else {
-                        routeToCompare += "/" + otherRoute[i];
-                    }
-                    newRouteObject += `['${otherRoute[i]}']`;
-                    routeObject = newRouteObject;
-                    newRouteObject += "={}";
-                    if(rutas.includes(routeToCompare)) {
-                        continue;
-                    } else {
-                        storeMetadata(routeToCompare);
-                        eval(newRouteObject);
-                    }
-                }
-                updateLocalStorage();
-                updateRutas();
-            }
-        } else if (arg.includes("/")) {
-            absoluteDirectory = arg;
-            route += `/${absoluteDirectory}`;
-            if(rutas.includes(route)) {
-                return new Error('this directory/file allready exist.');
-            } else {
-                argument = route.split('/');
-                let routeObject = "directoryObject";
-                let routeToEval;
-                let routeToMetadata = "";
-                for(let i = 0; i < argument.length; i++) {
-                    if(i === 0) {
-                        routeToMetadata += argument[i];
-                    } else {
-                        routeToMetadata += "/" + argument[i];
-                    }
-                    routeObject += `['${argument[i]}']`;
-                    routeToEval = routeObject;
-                    routeToEval += "={}";
-                    if(rutas.includes(routeToMetadata)) {
-                        continue;
-                    } else {
-                        storeMetadata(routeToMetadata);
-                        eval(routeToEval);
-                        updateLocalStorage();
-                        updateRutas();
-                    }
-                }
-            }
-        } else {
-            absoluteDirectory = arg;
-            route += `/${absoluteDirectory}`;
             if(rutas.includes(route)) {
                 return new Error('this directory/file allready exist.');
             } else {
@@ -867,7 +864,137 @@ function mkdir(arg) {
             }
         }
     } else {
-        return new Error('You have to declare a path or file to create');
+        if (arg !== ""){
+            if(arg[0] === "." && arg[1] === "/"){
+                absoluteDirectory = arg.split("").slice(1).join("");
+                absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
+                if(absoluteDirectory === "") {
+                    route += `${absoluteDirectory}`;
+                } else {
+                    route += `/${absoluteDirectory}`;
+                }
+                if(rutas.includes(route)) {
+                    return new Error('this directory/file allready exist.');
+                } else {
+                    argument = route.split('/');
+                    let routeObject = "directoryObject";
+                    let routeToEval;
+                    let routeToMetadata = "";
+                    for(let i = 0; i < argument.length; i++) {
+                        if(i === 0) {
+                            routeToMetadata += argument[i];
+                        } else {
+                            routeToMetadata += "/" + argument[i];
+                        }
+                        routeObject += `['${argument[i]}']`;
+                        routeToEval = routeObject;
+                        routeToEval += "={}";
+                        if(rutas.includes(routeToMetadata)) {
+                            continue;
+                        } else {
+                            storeMetadata(routeToMetadata);
+                            eval(routeToEval);
+                            updateLocalStorage();
+                            updateRutas();
+                        }
+                    }
+                }
+            } else if (arg[0] === "/") {
+                yesOrNoArgument = arg;
+                let argument = arg.split("").slice(1).join("");
+                argument = argument.split('/');
+                if(argument[0] !== "raulrexulon") {
+                    let p = document.createElement('p');
+                    p.textContent = `Do you wan't to create a new Root Directory?`;
+                    input.insertAdjacentElement('beforebegin', p);
+                    newRootDirectory = true;
+                } else {
+                    let otherRoute = arg.split('').slice(1).join('');
+                    otherRoute = otherRoute.split("/");
+                    let routeObject = "directoryObject";
+                    let routeToCompare = "";
+                    for (let i = 0; i < otherRoute.length; i++) {
+                        let newRouteObject = routeObject;
+                        if(i===0) {
+                            routeToCompare += otherRoute[i];
+                        } else {
+                            routeToCompare += "/" + otherRoute[i];
+                        }
+                        newRouteObject += `['${otherRoute[i]}']`;
+                        routeObject = newRouteObject;
+                        newRouteObject += "={}";
+                        if(rutas.includes(routeToCompare)) {
+                            continue;
+                        } else {
+                            storeMetadata(routeToCompare);
+                            eval(newRouteObject);
+                        }
+                    }
+                    updateLocalStorage();
+                    updateRutas();
+                }
+            } else if (arg.includes("/")) {
+                absoluteDirectory = arg;
+                route += `/${absoluteDirectory}`;
+                if(rutas.includes(route)) {
+                    return new Error('this directory/file allready exist.');
+                } else {
+                    argument = route.split('/');
+                    let routeObject = "directoryObject";
+                    let routeToEval;
+                    let routeToMetadata = "";
+                    for(let i = 0; i < argument.length; i++) {
+                        if(i === 0) {
+                            routeToMetadata += argument[i];
+                        } else {
+                            routeToMetadata += "/" + argument[i];
+                        }
+                        routeObject += `['${argument[i]}']`;
+                        routeToEval = routeObject;
+                        routeToEval += "={}";
+                        if(rutas.includes(routeToMetadata)) {
+                            continue;
+                        } else {
+                            storeMetadata(routeToMetadata);
+                            eval(routeToEval);
+                            updateLocalStorage();
+                            updateRutas();
+                        }
+                    }
+                }
+            } else {
+                absoluteDirectory = arg;
+                route += `/${absoluteDirectory}`;
+                if(rutas.includes(route)) {
+                    return new Error('this directory/file allready exist.');
+                } else {
+                    argument = route.split('/');
+                    let routeObject = "directoryObject";
+                    let routeToEval;
+                    let routeToMetadata = "";
+                    for(let i = 0; i < argument.length; i++) {
+                        if(i === 0) {
+                            routeToMetadata += argument[i];
+                        } else {
+                            routeToMetadata += "/" + argument[i];
+                        }
+                        routeObject += `['${argument[i]}']`;
+                        routeToEval = routeObject;
+                        routeToEval += "={}";
+                        if(rutas.includes(routeToMetadata)) {
+                            continue;
+                        } else {
+                            storeMetadata(routeToMetadata);
+                            eval(routeToEval);
+                            updateLocalStorage();
+                            updateRutas();
+                        }
+                    }
+                }
+            }
+        } else {
+            return new Error('You have to declare a path or file to create');
+        }
     }
 }
 function echo(arg) {
