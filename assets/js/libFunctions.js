@@ -1038,7 +1038,6 @@ function mkdir(arg) {
 }
 function echo(arg) {
     try {
-            
         newRootDirectory = false;
         changeUser = false;
         let newFlag = arg.split(">>")
@@ -1048,12 +1047,10 @@ function echo(arg) {
         }
         let route = inUseRoute.split("").slice(1).join("");
         let absoluteDirectory = "";
-
         if(newFlag[1].length > 0 && newFlag[1][0] === "/") {
             absoluteDirectory = newFlag[1];
             absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
         }
-
         if(newFlag[1].length > 0 && newFlag[1][0] === "/" && rutas.includes(absoluteDirectory)) {
             let routeObject = "directoryObject";
             let routeToCompare = "";
@@ -1146,7 +1143,6 @@ function echo(arg) {
                 eval(routeObject)
                 updateLocalStorage();
                 updateRutas();
-
             }
         } else if(newFlag[1].length > 0 && (!rutas.includes(`${route}/${newFlag[1]}`) || rutas.includes(`${route}/${newFlag[1]}`))) {
             let routeObject = "directoryObject";
@@ -1163,7 +1159,6 @@ function echo(arg) {
         } else {
             return new Error('Syntax Error');
         }
-
     } catch (error) {
         let p = document.createElement('p');
         p.textContent = error;
