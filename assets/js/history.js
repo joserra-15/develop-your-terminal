@@ -1,6 +1,7 @@
 // Variable Definition
 
 let historyArray = [];
+let pulsedKeys=[]
 let counter = 0;
 const textarea = document.querySelector('.display-terminal__input');
 
@@ -21,6 +22,16 @@ function history(cmd, arg) {
 window.addEventListener('keydown', controlHistory);
 
 function controlHistory(e) {
+    pulsedKeys.push(e.keyCode)
+    if(pulsedKeys[pulsedKeys.length-1]===81 && pulsedKeys[pulsedKeys.length-2]=== 17){
+        document.querySelector(".header").classList.toggle("invisible");
+        document.querySelector(".display-terminal").classList.toggle("invisible");
+        document.getElementById("body").classList.toggle("controlq")
+    }
+    if(pulsedKeys[pulsedKeys.length-1]===76 && pulsedKeys[pulsedKeys.length-2]=== 17){
+        e.preventDefault();
+        clear()
+    }
     if (e.keyCode == 9) {
         e.preventDefault()
         let i = e.target.value, cmd = i.split(' ')[0].trim(), arg = ''
