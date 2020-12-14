@@ -101,7 +101,6 @@ function pwd() {
     changeUser = false;
     return inUseRoute;
 }
-//TODO: Actualizar size de metadata, acabar ls -S.
 function ls(arg) {
     newRootDirectory = false;
     changeUser = false;
