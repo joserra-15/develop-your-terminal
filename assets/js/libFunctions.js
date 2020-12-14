@@ -1168,7 +1168,6 @@ function cat(arg) {
         return new Error('file doesn\'t exist');
     }
 }
-
 function JS(arg) {
     if (!arg.endsWith('.js')){
         return new Error('Invalid file type')
@@ -1238,8 +1237,6 @@ function JS(arg) {
 
     console.log = console.old;  // changing console.log to default
 }
-
-
 function rm(arg) {
     newRootDirectory = false;
     changeUser = false;
