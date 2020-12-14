@@ -1009,6 +1009,51 @@ function echo(arg) {
             updateLocalStorage();
             updateRutas();
         }
+    } else if (newFlag[1].length > 0 && newFlag[1].includes("/")) {
+        route += `/${newFlag[1]}`;
+        if(rutas.includes(route)) {
+            let routeObject = "directoryObject";
+            let routeName = route;
+            route = route.split('/');
+            for(let i=0; i<route.length; i++){
+                routeObject += `['${route[i]}']`;
+            }
+            routeObject += ` = ${newFlag[0]}`;
+            storeMetadata(routeName);
+            eval(routeObject);
+            updateLocalStorage();
+            updateRutas();
+        } else {
+            route = route.split('/');
+            let routeObject = "directoryObject";
+            let routeToEval;
+            let routeToMetadata = "";
+            for(let i = 0; i < route.length - 1; i++) {
+                if(i === 0) {
+                    routeToMetadata += route[i];
+                } else {
+                    routeToMetadata += "/" + route[i];
+                }
+                routeObject += `['${route[i]}']`;
+                routeToEval = routeObject;
+                routeToEval += "={}";
+                if(rutas.includes(routeToMetadata)) {
+                    continue;
+                } else {
+                    storeMetadata(routeToMetadata);
+                    eval(routeToEval);
+                    updateLocalStorage();
+                    updateRutas();
+                }
+            }
+            routeToMetadata += "/" + route[route.length - 1];
+            storeMetadata(routeToMetadata);
+            routeObject += `['${route[route.length - 1]}'] = ${newFlag[0]}`;
+            eval(routeObject)
+            updateLocalStorage();
+            updateRutas();
+
+        }
     } else if(newFlag[1].length > 0 && (!rutas.includes(`${route}/${newFlag[1]}`) || rutas.includes(`${route}/${newFlag[1]}`))) {
         let routeObject = "directoryObject";
         let routeName = `${route}/${newFlag[1]}`;
