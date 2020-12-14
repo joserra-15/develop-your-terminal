@@ -1386,7 +1386,12 @@ function mv(arg) {
                         nRoute += `['${finalRoute[i]}']`;
                     }
                     storeMetadata(newRoute);
-                    eval(`${nRoute}['${words[0].trim()}'] = JSON.parse(JSON.stringify(eval(${routeObject}['${words[0].trim()}'])))`)
+                    if(words[0].includes(".")){
+                        let x = eval(`${routeObject}['${words[0].trim()}']`)
+                        eval(`${nRoute}['${words[0].trim()}'] = "${x}"`)
+                    }else{
+                        eval(`${nRoute}['${words[0].trim()}'] = JSON.parse(JSON.stringify(eval(${routeObject}['${words[0].trim()}'])))`)
+                    }
                     deleteMetadata(routeToCompare);
                     eval(`delete ${routeObject}['${words[0].trim()}']`)
                     updateLocalStorage()
@@ -1398,7 +1403,12 @@ function mv(arg) {
             let newRoute = `${routeToCompare}/${words[1].trim()}/${words[0].trim()}`;
             routeToCompare += "/" + words[0].trim();
             storeMetadata(newRoute);
-            eval(`${routeObject}['${words[1].trim()}']['${words[0].trim()}'] = JSON.parse(JSON.stringify(eval(${routeObject}['${words[0].trim()}'])))`);
+            if(words[0].includes(".")){
+                let x = eval(`${routeObject}['${words[0].trim()}']`)
+                eval(`${routeObject}['${words[1].trim()}']['${words[0].trim()}'] = "${x}"`);
+            }else{
+                eval(`${routeObject}['${words[1].trim()}']['${words[0].trim()}'] = JSON.parse(JSON.stringify(eval(${routeObject}['${words[0].trim()}'])))`);
+            }
             deleteMetadata(routeToCompare);
             eval(`delete ${routeObject}['${words[0].trim()}']`)
             updateLocalStorage();
@@ -1408,7 +1418,14 @@ function mv(arg) {
             let newRoute = routeToCompare + "/" + words[1].trim();
             routeToCompare += "/" + words[0].trim();
             storeMetadata(newRoute);
-            eval(`${routeObject}['${words[1].trim()}'] = JSON.parse(JSON.stringify(eval(${routrObject}['${words[0].trim()}'])))`);
+            if(words[0].includes(".")){
+                let x = eval(`${routeObject}['${words[0].trim()}']`)
+                if(words[1].trim().includes(".txt") || words[1].trim().includes(".js")){
+                    eval(`${routeObject}['${words[1].trim()}'] = "${x}"`);
+                }else{return new Error (`mv: cannot change file name without extension`);}
+            }else{
+                eval(`${routeObject}['${words[1].trim()}'] = JSON.parse(JSON.stringify(eval(${routeObject}['${words[0].trim()}'])))`);
+            }
             deleteMetadata(routeToCompare);
             eval(`delete ${routeObject}['${words[0].trim()}']`);
             updateLocalStorage()
