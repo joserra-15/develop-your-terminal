@@ -769,7 +769,7 @@ function mkdir(arg) {
 function echo(arg) {
     newRootDirectory = false;
     changeUser = false;
-    let newFlag = arg.split(">")
+    let newFlag = arg.split(">>")
     newFlag = newFlag.map(e => e.trim())
     let route = inUseRoute.split("").slice(1).join("");
     let absoluteDirectory = "";

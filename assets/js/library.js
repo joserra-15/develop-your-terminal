@@ -25,7 +25,7 @@ window.addEventListener('keypress', (e) => {
     }
 })
 
-// Add the principal function to work whith the bash
+// Add the principal function to work with the bash
 
 function library(cmd, arg = '') {
     history(cmd, arg);
