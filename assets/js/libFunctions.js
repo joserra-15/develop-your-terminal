@@ -28,6 +28,7 @@ updateLocalStorage();
 updateRutas();
 
 // Define functions for all the updates
+
 function updateObject() {
     if (localStorage.getItem("directory") === null) {
         let directoryObjectString = JSON.stringify(directoryObject);
