@@ -767,126 +767,134 @@ function mkdir(arg) {
     } */
 }
 function echo(arg) {
-    newRootDirectory = false;
-    changeUser = false;
-    let newFlag = arg.split(">>")
-    newFlag = newFlag.map(e => e.trim())
-    let route = inUseRoute.split("").slice(1).join("");
-    let absoluteDirectory = "";
+    try {
+            
+        newRootDirectory = false;
+        changeUser = false;
+        let newFlag = arg.split(">>")
+        newFlag = newFlag.map(e => e.trim())
+        let route = inUseRoute.split("").slice(1).join("");
+        let absoluteDirectory = "";
 
-    if(newFlag[1].length > 0 && newFlag[1][0] === "/") {
-        absoluteDirectory = newFlag[1];
-        absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
-    }
-
-    if(newFlag[1].length > 0 && newFlag[1][0] === "/" && rutas.includes(absoluteDirectory)) {
-        let routeObject = "directoryObject";
-        let routeToCompare = "";
-        absoluteDirectory = absoluteDirectory.split('/');
-        for(let i=0; i < absoluteDirectory.length; i++){
-            if(i===0) {
-                routeToCompare += absoluteDirectory[i];
-            } else {
-                routeToCompare += "/" + absoluteDirectory[i];
-            }
-            routeObject += `['${absoluteDirectory[i]}']`;
+        if(newFlag[1].length > 0 && newFlag[1][0] === "/") {
+            absoluteDirectory = newFlag[1];
+            absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
         }
-        storeMetadata(routeToCompare);
-        routeObject += ` = ${newFlag[0]}`
-        eval(routeObject)
-        updateLocalStorage();
-        updateRutas();
-    } else if(newFlag[1].length > 0 && newFlag[1][0] === "/" && !rutas.includes(absoluteDirectory)) {
-        if(newFlag[1][1] !== "r") {
-            return new Error('you can´t create a new root.');
-        } else {
-            let otherRoute = newFlag[1].split('').slice(1).join('');
-            otherRoute = otherRoute.split("/");
+
+        if(newFlag[1].length > 0 && newFlag[1][0] === "/" && rutas.includes(absoluteDirectory)) {
             let routeObject = "directoryObject";
             let routeToCompare = "";
-            for (let i = 0; i < otherRoute.length - 1; i++) {
-                let newRouteObject = routeObject;
+            absoluteDirectory = absoluteDirectory.split('/');
+            for(let i=0; i < absoluteDirectory.length; i++){
                 if(i===0) {
-                    routeToCompare += otherRoute[i];
+                    routeToCompare += absoluteDirectory[i];
                 } else {
-                    routeToCompare += "/" + otherRoute[i];
+                    routeToCompare += "/" + absoluteDirectory[i];
                 }
-                newRouteObject += `['${otherRoute[i]}']`;
-                routeObject = newRouteObject;
-                newRouteObject += " = {}";
-                if(rutas.includes(routeToCompare)) {
-                    continue;
-                } else {
-                    storeMetadata(routeToCompare);
-                    eval(newRouteObject);
-                }
+                routeObject += `['${absoluteDirectory[i]}']`;
             }
-            routeToCompare += "/" + otherRoute[otherRoute.length - 1];
             storeMetadata(routeToCompare);
-            routeObject += `['${otherRoute[otherRoute.length - 1]}'] = ${newFlag[0]}`;
+            routeObject += ` = ${newFlag[0]}`
             eval(routeObject)
             updateLocalStorage();
             updateRutas();
-        }
-    } else if (newFlag[1].length > 0 && newFlag[1].includes("/")) {
-        route += `/${newFlag[1]}`;
-        if(rutas.includes(route)) {
+        } else if(newFlag[1].length > 0 && newFlag[1][0] === "/" && !rutas.includes(absoluteDirectory)) {
+            if(newFlag[1][1] !== "r") {
+                return new Error('you can´t create a new root.');
+            } else {
+                let otherRoute = newFlag[1].split('').slice(1).join('');
+                otherRoute = otherRoute.split("/");
+                let routeObject = "directoryObject";
+                let routeToCompare = "";
+                for (let i = 0; i < otherRoute.length - 1; i++) {
+                    let newRouteObject = routeObject;
+                    if(i===0) {
+                        routeToCompare += otherRoute[i];
+                    } else {
+                        routeToCompare += "/" + otherRoute[i];
+                    }
+                    newRouteObject += `['${otherRoute[i]}']`;
+                    routeObject = newRouteObject;
+                    newRouteObject += " = {}";
+                    if(rutas.includes(routeToCompare)) {
+                        continue;
+                    } else {
+                        storeMetadata(routeToCompare);
+                        eval(newRouteObject);
+                    }
+                }
+                routeToCompare += "/" + otherRoute[otherRoute.length - 1];
+                storeMetadata(routeToCompare);
+                routeObject += `['${otherRoute[otherRoute.length - 1]}'] = ${newFlag[0]}`;
+                eval(routeObject)
+                updateLocalStorage();
+                updateRutas();
+            }
+        } else if (newFlag[1].length > 0 && newFlag[1].includes("/")) {
+            route += `/${newFlag[1]}`;
+            if(rutas.includes(route)) {
+                let routeObject = "directoryObject";
+                let routeName = route;
+                route = route.split('/');
+                for(let i=0; i<route.length; i++){
+                    routeObject += `['${route[i]}']`;
+                }
+                routeObject += ` = ${newFlag[0]}`;
+                storeMetadata(routeName);
+                eval(routeObject);
+                updateLocalStorage();
+                updateRutas();
+            } else {
+                route = route.split('/');
+                let routeObject = "directoryObject";
+                let routeToEval;
+                let routeToMetadata = "";
+                for(let i = 0; i < route.length - 1; i++) {
+                    if(i === 0) {
+                        routeToMetadata += route[i];
+                    } else {
+                        routeToMetadata += "/" + route[i];
+                    }
+                    routeObject += `['${route[i]}']`;
+                    routeToEval = routeObject;
+                    routeToEval += "={}";
+                    if(rutas.includes(routeToMetadata)) {
+                        continue;
+                    } else {
+                        storeMetadata(routeToMetadata);
+                        eval(routeToEval);
+                        updateLocalStorage();
+                        updateRutas();
+                    }
+                }
+                routeToMetadata += "/" + route[route.length - 1];
+                storeMetadata(routeToMetadata);
+                routeObject += `['${route[route.length - 1]}'] = ${newFlag[0]}`;
+                eval(routeObject)
+                updateLocalStorage();
+                updateRutas();
+
+            }
+        } else if(newFlag[1].length > 0 && (!rutas.includes(`${route}/${newFlag[1]}`) || rutas.includes(`${route}/${newFlag[1]}`))) {
             let routeObject = "directoryObject";
-            let routeName = route;
+            let routeName = `${route}/${newFlag[1]}`;
             route = route.split('/');
             for(let i=0; i<route.length; i++){
                 routeObject += `['${route[i]}']`;
             }
-            routeObject += ` = ${newFlag[0]}`;
+            routeObject += `['${newFlag[1]}'] = ${newFlag[0]}`;
             storeMetadata(routeName);
             eval(routeObject);
             updateLocalStorage();
             updateRutas();
         } else {
-            route = route.split('/');
-            let routeObject = "directoryObject";
-            let routeToEval;
-            let routeToMetadata = "";
-            for(let i = 0; i < route.length - 1; i++) {
-                if(i === 0) {
-                    routeToMetadata += route[i];
-                } else {
-                    routeToMetadata += "/" + route[i];
-                }
-                routeObject += `['${route[i]}']`;
-                routeToEval = routeObject;
-                routeToEval += "={}";
-                if(rutas.includes(routeToMetadata)) {
-                    continue;
-                } else {
-                    storeMetadata(routeToMetadata);
-                    eval(routeToEval);
-                    updateLocalStorage();
-                    updateRutas();
-                }
-            }
-            routeToMetadata += "/" + route[route.length - 1];
-            storeMetadata(routeToMetadata);
-            routeObject += `['${route[route.length - 1]}'] = ${newFlag[0]}`;
-            eval(routeObject)
-            updateLocalStorage();
-            updateRutas();
+            return new Error('Syntax Error');
+        }
 
-        }
-    } else if(newFlag[1].length > 0 && (!rutas.includes(`${route}/${newFlag[1]}`) || rutas.includes(`${route}/${newFlag[1]}`))) {
-        let routeObject = "directoryObject";
-        let routeName = `${route}/${newFlag[1]}`;
-        route = route.split('/');
-        for(let i=0; i<route.length; i++){
-            routeObject += `['${route[i]}']`;
-        }
-        routeObject += `['${newFlag[1]}'] = ${newFlag[0]}`;
-        storeMetadata(routeName);
-        eval(routeObject);
-        updateLocalStorage();
-        updateRutas();
-    } else {
-        return new Error('Syntax Error');
+    } catch (error) {
+        let p = document.createElement('p');
+        p.textContent = error;
+        input.insertAdjacentElement('beforebegin', p)
     }
 }
 function cat(arg) {
