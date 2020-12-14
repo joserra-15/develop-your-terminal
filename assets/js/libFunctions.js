@@ -1228,6 +1228,23 @@ function JS(arg) {
             p.textContent += error
         }
         input.insertAdjacentElement('beforebegin', p)
+    } else if (arg.length > 0 && arg.includes("/")) {
+        route += `/${arg}`;
+        if(rutas.includes(route)) {
+            let routeObject = "directoryObject";
+            route = route.split('/');
+            for(let i=0; i<route.length; i++){
+                routeObject += `['${route[i]}']`;
+            }
+            try {
+                p.textContent += eval(eval(routeObject))
+            } catch (error) {
+                p.textContent += error
+            }
+            input.insertAdjacentElement('beforebegin', p)
+        } else {
+            return new Error('file doesn\'t exist');
+        } 
     } else if (arg.length > 0 && rutas.includes(`${route}/${arg}`)) {
         let routeObject = "directoryObject";
         route = route.split('/');
