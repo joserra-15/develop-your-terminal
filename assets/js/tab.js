@@ -10,7 +10,7 @@ function tab(cmd,arg){
         if(arg.includes("--")){
             let words=arg.split("--");
             if(words[1].trim().includes("/")){
-                words[1]=routeCheck(words[1])
+                words[1]=routeCheck(words[1].trim())
                 words[1]=`/${autocompleteRoute(words[1])}`
             }else{
             words[1]=autocomplete(words[1].trim());
@@ -29,7 +29,7 @@ function tab(cmd,arg){
         if(arg.includes(">>")){
             let words=arg.split(">>");
             if(words[1].includes("/")){
-                words[1]=routeCheck(words[1])
+                words[1]=routeCheck(words[1].trim())
                 words[1]=`/${autocompleteRoute(words[1])}`
             }else{words[1]=autocomplete(words[1].trim());}
             textarea.value=`${cmd} ${words[0].trim()} >> ${words[1]}`
