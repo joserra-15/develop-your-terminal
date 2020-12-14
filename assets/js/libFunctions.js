@@ -773,6 +773,9 @@ function echo(arg) {
         changeUser = false;
         let newFlag = arg.split(">>")
         newFlag = newFlag.map(e => e.trim())
+        if (!(newFlag[1].endsWith('.txt') || newFlag[1].endsWith('.js')) ){
+            return new Error('Invalid file type')
+        }
         let route = inUseRoute.split("").slice(1).join("");
         let absoluteDirectory = "";
 
