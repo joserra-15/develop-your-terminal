@@ -42,6 +42,8 @@ function library(cmd, arg = '') {
             return echo(arg);
         case 'cat':
             return cat(arg);
+        case 'JS':
+            return JS(arg);
         case 'rm':
             return rm(arg);
         case 'mv':

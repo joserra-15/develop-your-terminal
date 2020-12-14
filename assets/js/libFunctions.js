@@ -923,6 +923,75 @@ function cat(arg) {
         return new Error('file doesn\'t exist');
     }
 }
+
+function JS(arg) {
+    newRootDirectory = false;
+    changeUser = false;
+    let route = inUseRoute.split("").slice(1).join("");
+    let absoluteDirectory = "";
+    let p = document.createElement('p')
+
+    // changing default console.log to print on screen
+    console.old = console.log;
+    (function () {
+        console.log = function () {
+            let output = "", arg, i;
+            for (i = 0; i < arguments.length; i++) {
+                arg = arguments[i];
+                if (
+                    typeof arg === "object" &&
+                    typeof JSON === "object" &&
+                    typeof JSON.stringify === "function"
+                ) {
+                    output += JSON.stringify(arg) + '\n';   
+                } else {
+                    output += arg + '\n ';
+                }
+            }
+
+            return p.innerHTML += output;
+        }
+    })();
+    // --finish--
+
+    if (arg.length > 0 && arg[0] === "/") {
+        absoluteDirectory = arg;
+        absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
+    }
+    if (arg.length > 0 && arg[0] === "/" && rutas.includes(absoluteDirectory)) {
+        let routeObject = "directoryObject";
+        absoluteDirectory = absoluteDirectory.split('/');
+        for(let i=0; i < absoluteDirectory.length; i++){
+            routeObject += `['${absoluteDirectory[i]}']`;
+        }
+        try {
+            p.textContent += eval(eval(routeObject))   
+        } catch (error) {
+            p.textContent += error
+        }
+        input.insertAdjacentElement('beforebegin', p)
+
+    } else if (arg.length > 0 && rutas.includes(`${route}/${arg}`)) {
+        let routeObject = "directoryObject";
+        route = route.split('/');
+        for(let i=0; i<route.length; i++){
+            routeObject += `['${route[i]}']`;
+        }
+        routeObject += `['${arg}']`;
+        try {
+            p.textContent += eval(eval(routeObject))   
+        } catch (error) {
+            p.textContent += error
+        }
+        input.insertAdjacentElement('beforebegin', p)
+    } else {
+        return new Error('file doesn\'t exist');
+    }
+
+    console.log = console.old;  // changing console.log to default
+}
+
+
 function rm(arg) {
     newRootDirectory = false;
     changeUser = false;
