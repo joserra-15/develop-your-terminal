@@ -331,7 +331,6 @@ function ls(arg) {
     }
     function printFoldersS(arg) {
         updateMetadataSize();
-        //Crear la ruta a la que le hacemos el -S
         if(arg.length > 0) {
             if(arg[0] === "/"){
                 let route = arg.split("").slice(1).join("");
@@ -428,7 +427,6 @@ function ls(arg) {
             }
             return printDirectorysSizeOrdered(routeObject, routeToCompareMetadata);
         }
-        //Impimir en pantalla los archivos/directorios de la ruta ordenados por size
         function updateMetadataSize() {
             metaData.forEach(e => {
                 let name = e.name;
@@ -491,14 +489,14 @@ function ls(arg) {
                     let finalRoute = route + `/${e}`;
                     metaData.forEach(e => {
                         if(e.name === finalRoute) {
-                            timeArray.push(e.time);
+                            sizeArray.push(e.size);
                         }
                     })
                 })
                 let arrayForFinalArray = [];
                 for(let i = 0; i < folders.length; i ++) {
                     arrayForFinalArray.push(folders[i]);
-                    arrayForFinalArray.push(timeArray[i]);
+                    arrayForFinalArray.push(sizeArray[i]);
                     finalArray.push(arrayForFinalArray);
                     arrayForFinalArray = [];
                 }
