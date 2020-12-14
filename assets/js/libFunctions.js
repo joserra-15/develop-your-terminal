@@ -1177,7 +1177,6 @@ function JS(arg) {
     let route = inUseRoute.split("").slice(1).join("");
     let absoluteDirectory = "";
     let p = document.createElement('p')
-
     // changing default console.log to print on screen
     console.old = console.log;
     (function () {
@@ -1190,17 +1189,15 @@ function JS(arg) {
                     typeof JSON === "object" &&
                     typeof JSON.stringify === "function"
                 ) {
-                    output += JSON.stringify(arg) + '\n';   
+                    output += JSON.stringify(arg) + '\n';
                 } else {
                     output += arg + '\n ';
                 }
             }
-
             return p.innerHTML += output;
         }
     })();
     // --finish--
-
     if (arg.length > 0 && arg[0] === "/") {
         absoluteDirectory = arg;
         absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
@@ -1212,12 +1209,11 @@ function JS(arg) {
             routeObject += `['${absoluteDirectory[i]}']`;
         }
         try {
-            p.textContent += eval(eval(routeObject))   
+            p.textContent += eval(eval(routeObject))
         } catch (error) {
             p.textContent += error
         }
         input.insertAdjacentElement('beforebegin', p)
-
     } else if (arg.length > 0 && rutas.includes(`${route}/${arg}`)) {
         let routeObject = "directoryObject";
         route = route.split('/');
@@ -1226,7 +1222,7 @@ function JS(arg) {
         }
         routeObject += `['${arg}']`;
         try {
-            p.textContent += eval(eval(routeObject))   
+            p.textContent += eval(eval(routeObject))
         } catch (error) {
             p.textContent += error
         }
@@ -1234,7 +1230,6 @@ function JS(arg) {
     } else {
         return new Error('file doesn\'t exist');
     }
-
     console.log = console.old;  // changing console.log to default
 }
 function rm(arg) {
