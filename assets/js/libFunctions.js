@@ -939,6 +939,9 @@ function cat(arg) {
 }
 
 function JS(arg) {
+    if (!arg.endsWith('.js')){
+        return new Error('Invalid file type')
+    }
     newRootDirectory = false;
     changeUser = false;
     let route = inUseRoute.split("").slice(1).join("");
