@@ -28,7 +28,6 @@ updateLocalStorage();
 updateRutas();
 
 // Define functions for all the updates
-//TODO: llevarnos estas definiciones a un archivo .js distinto
 function updateObject() {
     if (localStorage.getItem("directory") === null) {
         let directoryObjectString = JSON.stringify(directoryObject);
