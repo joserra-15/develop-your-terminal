@@ -18,9 +18,18 @@ function history(cmd, arg) {
 
 // Add event listner to the up and down press.
 
-window.addEventListener('keyup', controlHistory);
+window.addEventListener('keydown', controlHistory);
 
 function controlHistory(e) {
+    if (e.keyCode == 9) {
+        e.preventDefault()
+        let i = e.target.value, cmd = i.split(' ')[0].trim(), arg = ''
+        for(let index = 1; index < i.split(' ').length; index++){
+            arg += i.split(' ')[index] + ' '
+        }
+        arg = arg.trim()
+        tab(cmd,arg);
+    }
     if(historyArray.length !== 0) {
         if(e.keyCode == 38) {
             textarea.value= historyArray[counter];
