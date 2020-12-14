@@ -6,7 +6,6 @@ function tab(cmd,arg){
         routeObject += `['${route[i]}']`;
     }
     let array=Object.keys(eval(routeObject))
-    console.log(array)
     if(cmd === "mv"){
         if(arg.includes("--")){
             let words=arg.split("--");
@@ -81,7 +80,6 @@ function tab(cmd,arg){
         }
         textarea.value=`${cmd} ${arg}`
     }
-
     function autocomplete(arg){
         let cont=0
         array.forEach(e => {
@@ -111,13 +109,10 @@ function tab(cmd,arg){
         if(arg[0]==="." && arg[1]==="/"){
             arg=arg.split("").slice(1).join("");
             arg=`${userRoute}${arg}`;
-            console.log(arg)
         }else if(arg[0]==="/"){
             arg=arg.split("").slice(1).join("");
-            console.log(arg)
         }else{
             arg=`${userRoute}/${arg}`;
-            console.log(arg)
         }
         return arg
     }
