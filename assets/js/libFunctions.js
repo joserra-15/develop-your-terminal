@@ -187,7 +187,6 @@ function ls(arg) {
                 let route = arg.split("/");
                 let newRoute = inUseRoute.split("").slice(1).join("");
                 newRoute = newRoute.split("/");
-                console.log(newRoute);
                 let actualPath = "directoryObject";
                 inUseRoute.split("").slice(1).join("");
                 newRoute.forEach(e => {
@@ -246,7 +245,6 @@ function ls(arg) {
                 let arfument = arg.split("").slice(1).join("");
                 arfument = arg.split("").slice(1).join("");
                 absoluteDirectory += `${arfument}`;
-                console.log(absoluteDirectory)
                 for(let i = 0; i < rutas.length; i++) {
                     if(rutas[i].includes(absoluteDirectory)) {
                         routes.push(rutas[i]);
@@ -256,7 +254,6 @@ function ls(arg) {
             } else if(arg.includes("/")) {
                 absoluteDirectory = startRoute;
                 absoluteDirectory += `/${arg}`;
-                console.log(absoluteDirectory)
                 for(let i = 0; i < rutas.length; i++) {
                     if(rutas[i].includes(absoluteDirectory)) {
                         routes.push(rutas[i]);
@@ -459,7 +456,6 @@ function ls(arg) {
                 metaData.forEach(e => {
                     if(e.name.includes(name)) {
                         rutas.push(e.name);
-                        console.log(rutas);
                     }
                 })
                 rutas.forEach(e => {
@@ -662,7 +658,6 @@ function cd(arg) {
         if(startDirectory[0] === "..") {
             argument = startDirectory[0];
             relativeRoute = "";
-            console.log(argument)
         } else {
             argument = " ";
             relativeRoute = startDirectory[0];
@@ -705,7 +700,6 @@ function cd(arg) {
                 finalRoute = finalRoute.split("").slice(1).join("");
                 finalRoute = finalRoute.split("").slice(1).join("");
                 let routeToCompare = inUseRoute.split("").slice(1).join("");
-                console.log(finalRoute);
                 routeToCompare += `/${finalRoute}`
                 if(rutas.includes(routeToCompare)) {
                     input.innerHTML = `>${routeToCompare}:`;
@@ -769,8 +763,6 @@ function mkdir(arg) {
                     routeObject += `['${argument[i]}']`;
                     routeToEval = routeObject;
                     routeToEval += "={}";
-                    console.log(routeObject);
-                    console.log(routeToMetadata);
                     if(rutas.includes(routeToMetadata)) {
                         continue;
                     } else {
@@ -834,8 +826,6 @@ function mkdir(arg) {
                     routeObject += `['${argument[i]}']`;
                     routeToEval = routeObject;
                     routeToEval += "={}";
-                    console.log(routeObject);
-                    console.log(routeToMetadata);
                     if(rutas.includes(routeToMetadata)) {
                         continue;
                     } else {
@@ -865,8 +855,6 @@ function mkdir(arg) {
                     routeObject += `['${argument[i]}']`;
                     routeToEval = routeObject;
                     routeToEval += "={}";
-                    console.log(routeObject);
-                    console.log(routeToMetadata);
                     if(rutas.includes(routeToMetadata)) {
                         continue;
                     } else {
@@ -1115,17 +1103,13 @@ function rm(arg) {
         if(arg[0]==="." && arg[1]==="/" ){
             arg=arg.slice(1)
             arg= `/${routeToCompare}${arg}`
-            console.log(arg)
         }else if(arg[0]!== "/"){
             arg= `/${routeToCompare}/${arg}`
-            console.log(arg)
         }
         if(arg[0] === "/" && arg[arg.length -1]!== "/") {
             arg = arg.slice(1);
             let notRoot=true
             rutas.forEach(e=>{
-                console.log(e)
-                console.log(!(e.includes("/")) && e===arg)
                 if(!(e.includes("/")) && e===arg){
                 notRoot=false;
                 }
@@ -1180,10 +1164,8 @@ function mv(arg) {
             if(finalRoute[0]==="." && finalRoute[1]==="/" ){
                 finalRoute=finalRoute.slice(1)
                 finalRoute= `/${routeToCompare}${finalRoute}`
-                console.log(finalRoute)
             }else if(finalRoute[0]!== "/"){
                 finalRoute= `/${routeToCompare}/${finalRoute}`
-                console.log(finalRoute)
             }
             if(finalRoute[0]==="/" && finalRoute[finalRoute.length -1]!== "/" ){
                 finalRoute=finalRoute.slice(1)
