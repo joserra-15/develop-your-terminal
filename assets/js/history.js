@@ -23,6 +23,7 @@ window.addEventListener('keydown', controlHistory);
 
 function controlHistory(e) {
     pulsedKeys.push(e.keyCode)
+    console.log(e)
     if(pulsedKeys[pulsedKeys.length-1]===81 && pulsedKeys[pulsedKeys.length-2]=== 17){
         document.querySelector(".header").classList.toggle("invisible");
         document.querySelector(".display-terminal").classList.toggle("invisible");
@@ -30,7 +31,11 @@ function controlHistory(e) {
     }
     if(pulsedKeys[pulsedKeys.length-1]===76 && pulsedKeys[pulsedKeys.length-2]=== 17){
         e.preventDefault();
-        clear()
+        clear();
+    }
+    if(pulsedKeys[pulsedKeys.length-1]===68 && pulsedKeys[pulsedKeys.length-2]=== 17){
+        e.preventDefault();
+        window.close();
     }
     if (e.keyCode == 9) {
         e.preventDefault()
