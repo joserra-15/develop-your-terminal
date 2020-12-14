@@ -1449,6 +1449,7 @@ function clear() {
     changeUser = false;
     document.querySelectorAll('.display-terminal p').forEach(e => e.remove())
     document.querySelectorAll('.display-terminal pre').forEach(e => e.remove())
+    document.querySelectorAll('.display-terminal br').forEach(e => e.remove())
 }
 function help() {
     newRootDirectory = false;
