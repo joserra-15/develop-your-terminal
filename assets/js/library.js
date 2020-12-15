@@ -56,6 +56,8 @@ function library(cmd, arg = '') {
             return man(arg);
         case 'cmatrix':
             return cmatrix(arg);
+        case 'cassembler':
+            return cassembler(arg);
         case 'ckirby':
             return ckirby();
         case 'y':

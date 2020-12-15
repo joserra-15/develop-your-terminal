@@ -74,7 +74,7 @@ function tab(cmd,arg){
             }
             textarea.value=`${cmd} -t ${arg}`
         }
-    }else if(cmd!== "help" && cmd !== "man" && cmd !== "clear" && cmd!== "cmatrix" && cmd !== "y" && cmd!== "n" && cmd!== "ckirby"){
+    }else if(cmd!== "help" && cmd !== "man" && cmd !== "clear" && cmd!== "cmatrix" && cmd!== "cassembler" && cmd !== "y" && cmd!== "n" && cmd!== "ckirby"){
         if(arg.includes("/")){
             arg=routeCheck(arg)
             arg=`/${autocompleteRoute(arg)}`

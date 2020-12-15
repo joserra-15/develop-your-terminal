@@ -1470,6 +1470,7 @@ function help() {
     ckirby
     clear
     cmatrix
+    cassembler
     echo
     help
     ls
@@ -1552,6 +1553,12 @@ its scrollback buffer.</pre>`);
 Command to exit:
 cmatrix q</pre>`);
             break;
+        case "cassembler":
+            input.insertAdjacentHTML("beforebegin",
+`<pre>To change background to cassembler.
+Command to exit:
+cassembler q</pre>`);
+            break;
         case "ckirby":
             input.insertAdjacentHTML("beforebegin",
 `<pre>Show an image of Kirby in your screen. It is the titular
@@ -1584,6 +1591,18 @@ function cmatrix(arg){
     }else if(arg===""){
         document.querySelector('.display-terminal').classList.add("cmatrix")
         textarea.style.color= "white";
+        clear()
+    }
+}
+function cassembler(arg){
+    newRootDirectory = false;
+    changeUser = false;
+    if(arg==="q"){
+        document.querySelector('.display-terminal').classList.remove("cassembler")
+        textarea.style.color= "lime";
+    }else if(arg===""){
+        document.querySelector('.display-terminal').classList.add("cassembler")
+        textarea.style.color= "red";
         clear()
     }
 }

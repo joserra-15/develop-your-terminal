@@ -83,6 +83,12 @@ body{
     background: url(https://media.giphy.com/media/AOSwwqVjNZlDO/giphy.gif);
     color: white;
 }
+.cassembler{
+    background: url(img/assembler.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    color: darkblue;
+}
 .controlq{
     background: url(https://media.giphy.com/media/PjxPX98p8ncCOzgKYP/giphy.gif) no-repeat;
     background-size: cover;
