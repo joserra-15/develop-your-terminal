@@ -61,7 +61,7 @@ body{
     color: lime;
     padding: 10px;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .display-terminal__input{

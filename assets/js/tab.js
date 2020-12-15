@@ -49,7 +49,8 @@ function tab(cmd,arg){
                 arg=routeCheck(arg.trim())
                 arg=`/${autocompleteRoute(arg)}`
             }else{
-                arg=autocomplete(arg);
+                arg=arg.split("").slice(2).join("");
+                arg=autocomplete(arg.trim());
             }
             textarea.value=`${cmd} -R ${arg}`
         }else if(arg[0]==="-" && arg[1]==="S"){
@@ -58,7 +59,8 @@ function tab(cmd,arg){
                 arg=routeCheck(arg.trim())
                 arg=`/${autocompleteRoute(arg)}`
             }else{
-                arg=autocomplete(arg);
+                arg=arg.split("").slice(2).join("");
+                arg=autocomplete(arg.trim());
             }
             textarea.value=`${cmd} -S ${arg}`
         }else if(arg[0]==="-" && arg[1]==="t"){
@@ -67,7 +69,8 @@ function tab(cmd,arg){
                 arg=routeCheck(arg.trim())
                 arg=`/${autocompleteRoute(arg)}`
             }else{
-                arg=autocomplete(arg);
+                arg=arg.split("").slice(2).join("");
+                arg=autocomplete(arg.trim());
             }
             textarea.value=`${cmd} -t ${arg}`
         }
