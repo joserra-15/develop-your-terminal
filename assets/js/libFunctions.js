@@ -262,7 +262,9 @@ function ls(arg) {
         if(arg.length === 0) {
             for(let i = 0; i < rutas.length; i++) {
                 if(rutas[i].includes(startRoute)) {
-                    routes.push(rutas[i]);
+                    if(!(rutas[i].endsWith(".txt") || rutas[i].endsWith(".js"))) {
+                        routes.push(rutas[i]);
+                    }
                 }
             }
             printR();
@@ -271,8 +273,10 @@ function ls(arg) {
                 absoluteDirectory = arg;
                 absoluteDirectory = absoluteDirectory.split("").slice(1).join("");
                 for(let i = 0; i < rutas.length; i++) {
-                    if(rutas[i].includes(absoluteDirectory)) {
-                        routes.push(rutas[i]);
+                    if(rutas[i].includes(startRoute)) {
+                        if(!(rutas[i].endsWith(".txt") || rutas[i].endsWith(".js"))) {
+                            routes.push(rutas[i]);
+                        }
                     }
                 }
                 printR();
@@ -286,8 +290,10 @@ function ls(arg) {
                     absoluteDirectory += `${arfument}`;
                 }
                 for(let i = 0; i < rutas.length; i++) {
-                    if(rutas[i].includes(absoluteDirectory)) {
-                        routes.push(rutas[i]);
+                    if(rutas[i].includes(startRoute)) {
+                        if(!(rutas[i].endsWith(".txt") || rutas[i].endsWith(".js"))) {
+                            routes.push(rutas[i]);
+                        }
                     }
                 }
                 printR();
@@ -295,15 +301,19 @@ function ls(arg) {
                 absoluteDirectory = startRoute;
                 absoluteDirectory += `/${arg}`;
                 for(let i = 0; i < rutas.length; i++) {
-                    if(rutas[i].includes(absoluteDirectory)) {
-                        routes.push(rutas[i]);
+                    if(rutas[i].includes(startRoute)) {
+                        if(!(rutas[i].endsWith(".txt") || rutas[i].endsWith(".js"))) {
+                            routes.push(rutas[i]);
+                        }
                     }
                 }
                 printR();
             } else {
                 for(let i = 0; i < rutas.length; i++) {
                     if(rutas[i].includes(startRoute)) {
-                        routes.push(rutas[i]);
+                        if(!(rutas[i].endsWith(".txt") || rutas[i].endsWith(".js"))) {
+                            routes.push(rutas[i]);
+                        }
                     }
                 }
                 printR();
